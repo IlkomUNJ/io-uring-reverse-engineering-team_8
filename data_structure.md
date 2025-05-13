@@ -16,7 +16,7 @@ io_ev_fd       | io_uring/eventfd.c | eventfd_ctx, uint, uint, refcount_t, atomi
 If the following row value in a column is missing, assume the value is the same with the previous row in the same column. 
 Continue until all data structures documented properly.
 
-### memmap,c
+### memmap.c
 Structure name | Defined in | Attributes | Caller Functions Source | Source caller | usage
 ---------------|------------|------------|-------------------------|---------------|-------------------
 io_mapped_region | memmap.h | struct page \**, void \*, unsigned long, unsigned int, unsigned long | io_free_region | memmap.c | function parameter
