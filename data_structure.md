@@ -598,3 +598,667 @@ io_zcrx_args   | io_uring/zcrx.c      | struct io_kiocb *req; struct io_zcrx_ifq
 io_zcrx_args   | io_uring/zcrx.c      | struct io_kiocb *req; struct io_zcrx_ifq *ifq; struct socket *sock; unsigned nr_skbs;  | Used by zcrx functions to pass zero‑copy RX arguments      | io_uring/zcrx.c      | Holds parameters for zcrx operations
 io_zcrx_area   | io_uring/zcrx.h      | struct net_iov_area nia; struct io_zcrx_ifq *ifq; atomic_t *user_refs; bool is_mapped; u16 area_id; struct page **pages; spinlock_t freelist_lock; u32 free_count; u32 *freelist; | Used to manage the zero‑copy receive buffer area and free index list | io_uring/zcrx.h      | Represents the shared memory area for zero‑copy buffers
 io_zcrx_ifq    | io_uring/zcrx.h      | struct io_ring_ctx *ctx; struct io_zcrx_area *area; struct io_uring *rq_ring; struct io_uring_zcrx_rqe *rqes; u32 rq_entries; u32 cached_rq_head; spinlock_t rq_lock; u32 if_rxq; struct device *dev; struct net_device *netdev; netdevice_tracker netdev_tracker; spinlock_t lock; | Accessed by zcrx functions for managing zero‑copy RX operations | io_uring/zcrx.h      | Represents the zero‑copy RX interface queue linking io_uring context and network device buffers
+io_ev_fd       | io_uring/eventfd.c | eventfd_ctx, uint, uint, refcount_t, atomic_t, rcu_head | io_eventfd_free | io_uring/eventfd.c | local variable
+| | | | io_eventfd_put | io_uring/eventfd.c | function parameter
+| | | | io_eventfd_do_signal | io_uring/eventfd.c | local variable, function parameter
+| | | | __io_eventfd_signal | io_uring/eventfd.c | function parameter
+| | | | io_eventfd_grab | io_uring/eventfd.c | return value, local variable
+| | | | io_eventfd_signal | io_uring/eventfd.c | local variable 
+| | | | io_eventfd_flush_signal | io_uring/eventfd.c | local variable
+| | | | io_eventfd_register | io_uring/eventfd.c | local variable
+| | | | io_eventfd_unregister | io_uring/eventfd.c | function parameter
+io_kiocb_to_cmd        | io_uring/advise.c                  | req, struct io_madvise                                             | io_kiocb_to_cmd           | advise.c                         | function parameter
+o_req_set_res        | advise.c                  | req, ret, 0                                                       | io_req_set_res            | advise.c                         | function parameter  
+READ_ONCE            | advise.c                  | sqe->addr                                                         | READ_ONCE                | advise.c                         | function parameter                
+req_set_fail          | advise.c                  | req                                                               | req_set_fail              | advise.c     
+WARN_ON_ONCE          | advise.c                  | issue_flags & IO_URING_F_NONBLOCK                                 | WARN_ON_ONCE              | advise.c                         | function parameter 
+if                     | advise.c                   | CONFIG_ADVISE_SYSCALLS, CONFIG_MMU                                | if                      | advise.c                        | macro                            
+io_kiocb_to_cmd        | advise.c                   | req, struct io_madvise                                             | io_kiocb_to_cmd         | advise.c                        | function definition
+if                     | advise.c                   | CONFIG_ADVISE_SYSCALLS, CONFIG_MMU                                | if                      | advise.c                        | macro
+READ_ONCE             | advise.c                   | sqe->addr                                                          | READ_ONCE               | advise.c                        | function definition
+switch                 | advise.c                   | fa->advice                                                       | switch                  | advise.c                        | conditional branch
+if                     | advise.c                   | CONFIG_ADVISE_SYSCALLS, CONFIG_MMU                                | if                      | advise.c                        | macro
+io_kiocb_to_cmd        | advise.c                   | req, struct io_madvise                                            | io_kiocb_to_cmd         | advise.c                        | function call
+io_req_set_res         | advise.c                   | req, ret, 0                                                       | io_req_set_res          | advise.c                        | function call
+READ_ONCE              | advise.c                   | sqe->addr                                                         | READ_ONCE               | advise.c                        | function call
+req_set_fail           | advise.c                   | req                                                               | req_set_fail            | advise.c                        | function call
+io_req_set_res            | advise.c     | req, ret, 0                                         | io_req_set_res            | advise.c          | function call
+READ_ONCE                | advise.c     | sqe->addr                                            | READ_ONCE                | advise.c          | function call
+req_set_fail             | advise.c     | req                                                  | req_set_fail             | advise.c          | function call
+user_access_end           | advise.c     | issue_flags & IO_URING_F_NONBLOCK                      | user_access_end           | advise.c          | function call
+if                        | advise.c     | CONFIG_ADVISE_SYSCALLS, CONFIG_MMU                    | if                        | advise.c          | conditional
+io_kiocb_to_cmd           | advise.c     | req, struct io_madvise                                 | io_kiocb_to_cmd           | advise.c          | function call
+io_req_set_res            | advise.c     | req, ret, 0                                            | io_req_set_res            | advise.c          | function call
+READ_ONCE                  | advise.c     | sqe->addr                                               | READ_ONCE                  | advise.c          | macro
+req_set_fail               | advise.c     | req                                                     | req_set_fail               | advise.c          | function call
+WARN_ON_ONCE               | advise.c     | issue_flags & IO_URING_F_NONBLOCK                        | WARN_ON_ONCE               | advise.c          | macro
+if                         | advise.c     | CONFIG_ADVISE_SYSCALLS, CONFIG_MMU                      | if                         | advise.c          | conditional
+READ_ONCE                  | advise.c     | sqe->addr                                               | READ_ONCE                  | advise.c          | macro
+if                         | advise.c     | CONFIG_ADVISE_SYSCALLS, CONFIG_MMU                      | if                         | advise.c          | conditional
+if                           | advise.c     | CONFIG_ADVISE_SYSCALLS, CONFIG_MMU                      | if                           | advise.c          | conditional
+io_kiocb_to_cmd              | advise.c     | req, struct io_madvise                                   | io_kiocb_to_cmd              | advise.c          | function call
+io_req_set_res               | advise.c     | req, ret, 0                                              | io_req_set_res               | advise.c          | function call
+READ_ONCE                    | advise.c     | sqe->addr                                                | READ_ONCE                    | advise.c          | macro
+WARN_ON_ONCE                 | advise.c     | issue_flags & IO_URING_F_NONBLOCK                        | WARN_ON_ONCE                 | advise.c          | macro
+if                             | advise.c     | CONFIG_ADVISE_SYSCALLS, CONFIG_MMU                    | if                             | advise.c          | conditional
+io_kiocb_to_cmd                | advise.c     | req, struct io_madvise                                | io_kiocb_to_cmd                | advise.c          | function call
+io_req_set_res                 | advise.c     | req, ret, 0                                           | io_req_set_res                 | advise.c          | function call
+READ_ONCE                      | advise.c     | sqe->addr                                             | READ_ONCE                      | advise.c          | macro
+WARN_ON_ONCE                   | advise.c     | issue_flags & IO_URING_F_NONBLOCK                     | WARN_ON_ONCE                   | advise.c          | macro
+CLASS        
+if                             | advise.c     | CONFIG_ADVISE_SYSCALLS, CONFIG_MMU                    | if                             | advise.c          | conditional
+io_kiocb_to_cmd                | advise.c     | req, struct io_madvise                                | io_kiocb_to_cmd                | advise.c          | function call
+io_req_set_res                 | advise.c     | req, ret, 0                                           | io_req_set_res                 | advise.c          | function call
+READ_ONCE                      | advise.c     | sqe->addr                                             | READ_ONCE                      | advise.c          | macro
+req_set_fail                   | advise.c     | req                                                   | req_set_fail                   | advise.c          | function call
+switch                         | advise.c     | fa->advice                                             | switch                         | advise.c  
+WARN_ON_ONCE                   | advise.c     | issue_flags & IO_URING_F_NONBLOCK                       | WARN_ON_ONCE                   | advise.c          | macro
+defined                         | advise.c     | CONFIG_ADVISE_SYSCALLS, CONFIG_MMU                    | defined                         | advise.c          | macro
+if                              | advise.c     | CONFIG_ADVISE_SYSCALLS, CONFIG_MMU                    | if                              | advise.c          | conditional
+WARN_ON_ONCE                    | advise.c     | issue_flags & IO_URING_F_NONBLOCK                      | WARN_ON_ONCE                    | advise.c          | macro
+if                             | advise.c     | CONFIG_ADVISE_SYSCALLS, CONFIG_MMU                    | if                             | advise.c         | conditional
+io_kiocb_to_cmd               | advise.c     | req, struct io_madvise                                  | io_kiocb_to_cmd               | advise.c         | function call
+io_req_set_res                 | advise.c     | req, ret, 0                                             | io_req_set_res                 | advise.c         | function call
+READ_ONCE                      | advise.c     | sqe->addr                                              | READ_ONCE                      | advise.c         | macro
+req_set_fail                   | advise.c     | req                                                    | req_set_fail                   | advise.c         | function call
+WARN_ON_ONCE                   | advise.c     | issue_flags & IO_URING_F_NONBLOCK                      | WARN_ON_ONCE                   | advise.c         | macro
+io_req_set_res                 | advise.c     | req, ret, 0                                             | io_req_set_res                 | advise.c         | function call
+READ_ONCE                      | advise.c     | sqe->addr                                              | READ_ONCE                      | advise.c         | macro
+req_set_fail                   | advise.c     | req                                                    | req_set_fail                   | advise.c         | function call
+switch                          | advise.c     | fa->advice                                             | switch                          | advise.c         | keyword
+WARN_ON_ONCE                   | advise.c     | issue_flags & IO_URING_F_NONBLOCK                      | WARN_ON_ONCE                   | advise.c         | macro
+if                     | advise.c                  | #if defined(CONFIG_ADVISE_SYSCALLS) && defined(CONFIG_MMU)                 | if                      | advise.c                       | macro 
+io_kiocb_to_cmd        | advise.c                  | struct io_madvise *ma = io_kiocb_to_cmd(req, struct io_madvise)            | io_kiocb_to_cmd         | advise.c                       | function call 
+io_req_set_res         | advise.c                  | io_req_set_res(req, ret, 0)                                               | io_req_set_res          | advise.c                       | function call
+READ_ONCE             | advise.c                  | ma->addr = READ_ONCE(sqe->addr)                                           | READ_ONCE              | advise.c                       | function call
+return                  | advise.c         | return -EINVAL;                                                                   | return                    | advise.c               | keyword / control statement
+switch                  | advise.c         | switch (fa->advice) {                                                              | switch                    | advise.c               | keyword / control statement
+WARN_ON_ONCE            | advise.c         | WARN_ON_ONCE(issue_flags & IO_URING_F_NONBLOCK);                                  | WARN_ON_ONCE              | advise.c               | macro / debugging macro
+READ_ONCE              | advise.c                   | READ_ONCE(sqe->addr)                                             | READ_ONCE               | advise.c                       | function call
+req_set_fail           | advise.c                   | req_set_fail(req)                                                | req_set_fail            | advise.c                       | function call                  
+return                 | advise.c                   | return -EINVAL;                                                  | return                  | advise.c                       | keyword
+switch                 | advise.c                   | switch (fa->advice)                                              | switch                  | advise.c                       | conditional branch
+WARN_ON_ONCE           | advise.c                   | WARN_ON_ONCE(issue_flags & IO_URING_F_NONBLOCK)                  | WARN_ON_ONCE            | advise.c                       | macro
+io_kiocb_to_cmd         | advise.c                  | req, struct io_madvise                                           | io_kiocb_to_cmd         | advise.c                       | function call
+io_req_set_res         | advise.c                     | req, ret, 0                                          | io_req_set_res          | advise.c                       | function call
+if                     | advise.c                     | CONFIG_ADVISE_SYSCALLS, CONFIG_MMU                  | if                      | advise.c                       | macro  
+io_kiocb_to_cmd        | advise.c                     | io_kiocb_to_cmd(req, struct io_madvise)            | io_kiocb_to_cmd         | advise.c                       | function call
+READ_ONCE              | advise.c                     | READ_ONCE(sqe->addr)                                | READ_ONCE               | advise.c                       | macro 
+WARN_ON_ONCE           | advise.c                     | WARN_ON_ONCE(issue_flags & IO_URING_F_NONBLOCK)    | WARN_ON_ONCE            | advise.c                       | macro  
+if                     | advise.c                   | #if defined(CONFIG_ADVISE_SYSCALLS) && defined(CONFIG_MMU)      | if                     | advise.c                        | macro
+READ_ONCE                      | advise.c                 | ma->addr = READ_ONCE(sqe->addr);                          | READ_ONCE                    | advise.c                   | macro 
+WARN_ON_ONCE           | advise.c                   | WARN_ON_ONCE(issue_flags & IO_URING_F_NONBLOCK);                  | WARN_ON_ONCE            | advise.c                      | macro 
+bool                    | advise.c                   | io_fadvise_force_async(struct io_fadvise *fa)                     | bool                    | advise.c                        | function definition
+if                      | advise.c                   | #if defined(CONFIG_ADVISE_SYSCALLS) && defined(CONFIG_MMU)       | if                      | advise.c                        | macro (preprocessor) 
+READ_ONCE               | advise.c                   | ma->addr = READ_ONCE(sqe->addr)                                   | READ_ONCE               | advise.c                        | function call
+switch                  | advise.c                   | switch (fa->advice)                                               | switch                  | advise.c                        | conditional branch
+io_kiocb_to_cmd          | advise.c         | req, struct io_madvise                     | io_kiocb_to_cmd          | advise.c         | macro / cast
+io_req_set_res              | advise.c      | req, ret, 0                              | io_req_set_res             | advise.c      | function call
+READ_ONCE                   | advise.c      | sqe->addr                                | READ_ONCE                  | advise.c      | macro
+req_set_fail                | advise.c      | req                                      | req_set_fail               | advise.c      | function call
+return                      | advise.c      | return -EINVAL                           | return                     | advise.c      | keyword
+WARN_ON_ONCE                | advise.c      | issue_flags                              | WARN_ON_ONCE               | advise.c      | macro
+bool                    | advise.c                  | static bool io_fadvise_force_async(struct io_fadvise *fa)       | bool                   | advise.c                       | type definition
+if                      | advise.c                  | #if defined(CONFIG_ADVISE_SYSCALLS) && defined(CONFIG_MMU)       | if                      | advise.c                       | preprocessor directive
+switch                | advise.c                   | switch (fa->advice)                                               | switch                | advise.c                   | conditional branch
+WARN_ON_ONCE          | advise.c                   | WARN_ON_ONCE(issue_flags & IO_URING_F_NONBLOCK);                 | WARN_ON_ONCE          | advise.c                   | function call
+defined                | advise.c                   | CONFIG_ADVISE_SYSCALLS, CONFIG_MMU                                | defined                 | advise.c                        | macro
+if                     | advise.c                   | CONFIG_ADVISE_SYSCALLS, CONFIG_MMU                                | if                      | advise.c                        | macro
+io_kiocb_to_cmd        | advise.c                   | req, struct io_madvise                                            | io_kiocb_to_cmd         | advise.c                        | function call
+io_req_set_res         | advise.c                   | req, ret, 0                                                       | io_req_set_res          | advise.c                        | function call
+READ_ONCE              | advise.c                   | sqe->addr                                                         | READ_ONCE               | advise.c                        | function call
+req_set_fail           | advise.c                   | req                                                               | req_set_fail            | advise.c                        | function call
+if                     | advise.c                   | #if defined(CONFIG_ADVISE_SYSCALLS) && defined(CONFIG_MMU)      | if                      | advise.c                        | macro
+io_req_set_res                   | advise.c        | io_req_set_res(req, ret, 0);                                      | io_req_set_res               | advise.c        | function call 
+READ_ONCE             | advise.c                  | ma->addr = READ_ONCE(sqe->addr)                                | READ_ONCE             | advise.c  
+req_set_fail           | advise.c                  | req_set_fail(req)                                              | req_set_fail           | advise.c                       | function call
+switch                | advise.c                   | fa->advice                                                       | switch                 | advise.c                      | conditional branch
+true                  | advise.c                   | return true                                                        | true                   | advise.c                      | return statement
+WARN_ON_ONCE          | advise.c                   | WARN_ON_ONCE(issue_flags & IO_URING_F_NONBLOCK);                  | WARN_ON_ONCE           | advise.c                      | function call  
+if                       | advise.c                   | #if defined(CONFIG_ADVISE_SYSCALLS) && defined(CONFIG_MMU)       | if                       | advise.c                       | macro
+io_kiocb_to_cmd          | advise.c                   | struct io_madvise *ma = io_kiocb_to_cmd(req, struct io_madvise); | io_kiocb_to_cmd          | advise.c                       | function call
+io_req_set_res           | advise.c                   | io_req_set_res(req, ret, 0);                                    | io_req_set_res           | advise.c                       | function call
+READ_ONCE                | advise.c                   | ma->addr = READ_ONCE(sqe->addr);                                | READ_ONCE                | advise.c                       | function call
+WARN_ON_ONCE             | advise.c                   | WARN_ON_ONCE(issue_flags & IO_URING_F_NONBLOCK);               | WARN_ON_ONCE             | advise.c                       | function call
+if                       | advise.c                   | #if defined(CONFIG_ADVISE_SYSCALLS) && defined(CONFIG_MMU)       | if                       | advise.c                       | macro
+return                  | advise.c                   | return -EINVAL;                                                           | return                  | advise.c                       | function call
+switch                  | advise.c                   | switch (fa->advice) {                                                     | switch                  | advise.c                       | statement
+WARN_ON_ONCE            | advise.c                   | WARN_ON_ONCE(issue_flags & IO_URING_F_NONBLOCK);                          | WARN_ON_ONCE            | advise.c                       | function call
+do_madvise             | advise.c                   | ret = do_madvise(current->mm, ma->addr, ma->len, ma->advice);                     | do_madvise             | advise.c                     | function call
+if                     | advise.c                   | #if defined(CONFIG_ADVISE_SYSCALLS) && defined(CONFIG_MMU)                          | if                     | advise.c                     | conditional directive
+io_fadvise             | advise.c                   | struct io_fadvise {                                                                | io_fadvise             | advise.c                     | structure definition
+io_fadvise_force_async | advise.c                   | static bool io_fadvise_force_async(struct io_fadvise *fa)                          | io_fadvise_force_async | advise.c                     | function definition
+io_fadvise_prep        | advise.c                   | int io_fadvise_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)           | io_fadvise_prep        | advise.c                     | function definition
+io_kiocb_to_cmd        | advise.c                   | struct io_madvise *ma = io_kiocb_to_cmd(req, struct io_madvise);                   | io_kiocb_to_cmd        | advise.c                     | function call
+io_madvise             | advise.c                   | struct io_madvise {                                                                | io_madvise             | advise.c                     | structure definition
+io_madvise_prep        | advise.c                   | int io_madvise_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)           | io_madvise_prep        | advise.c                     | function definition
+io_req_set_res         | advise.c                   | io_req_set_res(req, ret, 0);                                                      | io_req_set_res         | advise.c                     | function call
+READ_ONCE              | advise.c                   | ma->addr = READ_ONCE(sqe->addr);                                                  | READ_ONCE              | advise.c                     | macro
+req_set_fail           | advise.c                   | req_set_fail(req);                                                                | req_set_fail           | advise.c                     | function call
+switch                 | advise.c                   | switch (fa->advice) {                                                             | switch                 | advise.c                     | statement
+vfs_fadvise            | advise.c                   | ret = vfs_fadvise(req->file, fa->offset, fa->len, fa->advice);                     | vfs_fadvise            | advise.c                     | function call
+WARN_ON_ONCE           | advise.c                   | WARN_ON_ONCE(issue_flags & IO_URING_F_NONBLOCK);                                  | WARN_ON_ONCE           | advise.c                     | function call
+if                      | advise.c                   | #if defined(CONFIG_ADVISE_SYSCALLS) && defined(CONFIG_MMU)                     | if                      | advise.c                     | preprocessor directive
+io_kiocb_to_cmd         | advise.c                   | struct io_madvise *ma = io_kiocb_to_cmd(req, struct io_madvise);               | io_kiocb_to_cmd         | advise.c                     | function call
+io_req_set_res          | advise.c                   | io_req_set_res(req, ret, 0);                                                  | io_req_set_res          | advise.c                     | function call
+READ_ONCE               | advise.c                   | ma->addr = READ_ONCE(sqe->addr);                                               | READ_ONCE               | advise.c                     | macro
+WARN_ON_ONCE            | advise.c                   | WARN_ON_ONCE(issue_flags & IO_URING_F_NONBLOCK);                               | WARN_ON_ONCE            | advise.c                     | function call
+if                      | advise.c                   | #if defined(CONFIG_ADVISE_SYSCALLS) && defined(CONFIG_MMU)                    | if                      | advise.c                     | preprocessor directive
+READ_ONCE             | advise.c                   | sqe->addr                                                       | READ_ONCE              | advise.c                        | function call    
+switch                | advise.c                   | fa->advice                                                      | switch                 | advise.c                        | conditional branch  
+WARN_ON_ONCE          | advise.c                   | issue_flags & IO_URING_F_NONBLOCK                               | WARN_ON_ONCE           | advise.c                        | macro     
+READ_ONCE               | advise.c         | READ_ONCE(sqe->addr)                                            | READ_ONCE               | advise.c                        | macro 
+req_set_fail            | advise.c         | req_set_fail(req)                                               | req_set_fail            | advise.c                        | function call      
+switch                  | advise.c         | switch (fa->advice)                                             | switch                  | advise.c                        | keyword   
+WARN_ON_ONCE            | advise.c         | WARN_ON_ONCE(issue_flags & IO_URING_F_NONBLOCK)               | WARN_ON_ONCE            | advise.c                        | macro    
+defined                   | advise.c                  | #if defined(CONFIG_ADVISE_SYSCALLS) && defined(CONFIG_MMU)                 | defined                   | advise.c                      | macro 
+if                        | advise.c                  | #if defined(CONFIG_ADVISE_SYSCALLS) && defined(CONFIG_MMU)                 | if                        | advise.c                      | macro   
+io_kiocb_to_cmd           | advise.c                  | struct io_madvise *ma = io_kiocb_to_cmd(req, struct io_madvise);           | io_kiocb_to_cmd           | advise.c                      | function call
+io_req_set_res            | advise.c                  | io_req_set_res(req, ret, 0);                                              | io_req_set_res            | advise.c                      | function call 
+READ_ONCE                  | advise.c                  | ma->addr = READ_ONCE(sqe->addr);                                            | READ_ONCE                  | advise.c                      | function call                   
+req_set_fail               | advise.c                  | req_set_fail(req);                                                          | req_set_fail               | advise.c                      | function call    
+switch                     | advise.c                  | switch (fa->advice) {                                                       | switch                     | advise.c                      | conditional branch   
+WARN_ON_ONCE               | advise.c                  | WARN_ON_ONCE(issue_flags & IO_URING_F_NONBLOCK);                            | WARN_ON_ONCE               | advise.c                      | macro 
+io_kiocb_to_cmd         | advise.c                  | struct io_madvise *ma = io_kiocb_to_cmd(req, struct io_madvise);            | io_kiocb_to_cmd         | advise.c                     | function call 
+io_req_set_res          | advise.c                  | io_req_set_res(req, ret, 0);                                               | io_req_set_res          | advise.c                     | function call 
+READ_ONCE              | advise.c                  | ma->addr = READ_ONCE(sqe->addr);                                            | READ_ONCE              | advise.c                     | macro call                      
+req_set_fail           | advise.c                  | req_set_fail(req);                                                          | req_set_fail           | advise.c                     | function call  
+io_madvise_prep | advise.h | struct io_kiocb*, struct io_uring_sqe* | io_madvise_prep | io_uring/advise.h | function to prepare madvise operation  |
+io_madvise | advise.h | struct io_kiocb*, unsigned int | io_madvise | io_uring/advise.h | function to perform madvise operation    |
+io_fadvise_prep | advise.h | struct io_kiocb*, struct io_uring_sqe* | io_fadvise_prep | io_uring/advise.h | function to prepare fadvise operation  |
+io_fadvise | advise.h | struct io_kiocb*, unsigned int | io_fadvise | io_uring/advise.h | function to perform fadvise operation    |
+memset                | alloc_cache.c             | obj, cache->init_clear                                            | memset                   | alloc_cache.c                    | function parameter 
+sizeof                | alloc_cache.c             | cache->entries                                                    | sizeof                   | alloc_cache.c                    | function parameter 
+while                 | alloc_cache.c             | entry                                                            | while                     | alloc_cache.c                    | function parameter  
+sizeof                | alloc_cache.c              | cache->entries                                                     | sizeof                  | alloc_cache
+sizeof                   | alloc_cache.c| void *                                               | sizeof                   | alloc_cache.c     | macro
+while                     | alloc_cache.c| io_alloc_cache_get(cache) != NULL                      | while                     | alloc_cache.c     | loop
+sizeof                     | alloc_cache.c| cache->entries = kvmalloc_array(max_nr, sizeof(void *), GFP_KERNEL) | sizeof                     | alloc_cache.c     | operator
+kmalloc                    | alloc_cache.c| cache->elem_size, gfp                                    | kmalloc                    | alloc_cache.c     | function call
+sizeof                     | alloc_cache.c| cache->entries = kvmalloc_array(max_nr, sizeof(void *), GFP_KERNEL) | sizeof                     | alloc_cache.c     | operator
+sizeof                     | alloc_cache.c| cache->entries = kvmalloc_array(max_nr, sizeof(void *), GFP_KERNEL) | sizeof                     | alloc_cache.c     | operator
+while                      | alloc_cache.c| entry = io_alloc_cache_get(cache)                        | while                      | alloc_cache.c     | loop
+io_alloc_cache_get             | alloc_cache.c| cache                                                 | io_alloc_cache_get             | alloc_cache.c     | function call
+sizeof                          | alloc_cache.c| max_nr, sizeof(void *), GFP_KERNEL                     | sizeof                          | alloc_cache.c     | keyword
+sizeof                         | alloc_cache.c| max_nr, sizeof(void *), GFP_KERNEL                     | sizeof                         | alloc_cache.c    | keyword
+while                           | alloc_cache.c| io_alloc_cache_get(cache)                              | while                           | alloc_cache.c    | loop
+while                   | alloc_cache.c    | while ((entry = io_alloc_cache_get(cache)) != NULL)                               | while                     | alloc_cache.c          | keyword / control statement  
+sizeof                 | alloc_cache.c              | sizeof(void *)                                                   | sizeof                 | alloc_cache.c                  | keyword   
+while                  | alloc_cache.c              | while ((entry = io_alloc_cache_get(cache)) != NULL)              | while                   | alloc_cache.c                  | keyword  
+sizeof                 | alloc_cache.c              | kvmalloc_array(max_nr, sizeof(void *), GFP_KERNEL);               | sizeof                  | alloc_cache.c                 | keyword        
+while                  | alloc_cache.c              | while ((entry = io_alloc_cache_get(cache)) != NULL)               | while                   | alloc_cache.c                 | keyword   
+kmalloc                 | alloc_cache.c              | kmalloc(cache->elem_size, gfp)                                    | kmalloc                 | alloc_cache.c                   | function call 
+while                   | alloc_cache.c              | while ((entry = io_alloc_cache_get(...))                          | while                   | alloc_cache.c                   | keyword 
+kmalloc                     | alloc_cache.c | cache->elem_size, gfp                    | kmalloc                    | alloc_cache.c | function call
+sizeof                      | alloc_cache.c | sizeof(void *)                           | sizeof                     | alloc_cache.c | keyword/operator
+while                       | alloc_cache.c | while ((entry = ...))                    | while                      | alloc_cache.c | keyword
+free                    | alloc_cache.c             | void (*free)(const void *)                                       | free                    | alloc_cache.c                 | function pointer 
+sizeof                | alloc_cache.c              | cache->entries = kvmalloc_array(max_nr, sizeof(void *), GFP_KERNEL); | sizeof                | alloc_cache.c              | function call               
+while                 | alloc_cache.c              | while ((entry = io_alloc_cache_get(cache)) != NULL)               | while                 | alloc_cache.c              | loop   
+sizeof                 | alloc_cache.c              | sizeof(void *)                                                    | sizeof                  | alloc_cache.c                   | macro
+entries                | alloc_cache.c              | if (!cache->entries)                                            | entries                 | alloc_cache.c                   | macro  
+io_alloc_cache_free    | alloc_cache.c              | void io_alloc_cache_free(struct io_alloc_cache *cache, ...)     | io_alloc_cache_free     | alloc_cache.c                   | function definition             
+io_alloc_cache_init    | alloc_cache.c              | bool io_alloc_cache_init(struct io_alloc_cache *cache)          | io_alloc_cache_init     | alloc_cache.c                   | function definition  
+kmalloc                        | alloc_cache.c      | obj = kmalloc(cache->elem_size, gfp);
+kvfree                 | alloc_cache.c             | cache->entries                                                | kvfree                 | alloc_cache.c                  | function call
+kvmalloc_array         | alloc_cache.c             | cache->entries = kvmalloc_array(max_nr, sizeof(void *), GFP_KERNEL) | kvmalloc_array         | alloc_cache.c                  | function call
+memset                 | alloc_cache.c             | memset(obj, 0, cache->init_clear)                              | memset                 | alloc_cache.c                  | function call
+sizeof                 | alloc_cache.c             | cache->entries = kvmalloc_array(max_nr, sizeof(void *), GFP_KERNEL) | sizeof                 | alloc_cache.c                  | operator
+while                 | alloc_cache.c              | while ((entry = io_alloc_cache_get(cache)) != NULL)                | while                  | alloc_cache.c                 | loop statement  
+kmalloc                 | alloc_cache.c              | obj = kmalloc(cache->elem_size, gfp);                                       | kmalloc                 | alloc_cache.c                  | function call
+kvfree                  | alloc_cache.c              | kvfree(cache->entries);                                                    | kvfree                  | alloc_cache.c                  | function call
+kvmalloc_array          | alloc_cache.c              | cache->entries = kvmalloc_array(max_nr, sizeof(void *), GFP_KERNEL);         | kvmalloc_array          | alloc_cache.c                  | function call
+memset                  | alloc_cache.c              | memset(obj, 0, cache->init_clear);                                          | memset                  | alloc_cache.c                  | function call
+sizeof                  | alloc_cache.c              | cache->entries = kvmalloc_array(max_nr, sizeof(void *), GFP_KERNEL);        | sizeof                  | alloc_cache.c                  | operator
+kmalloc                 | alloc_cache.c              | obj = kmalloc(cache->elem_size, gfp);                                          | kmalloc                 | alloc_cache.c                | function call
+sizeof                  | alloc_cache.c              | cache->entries = kvmalloc_array(max_nr, sizeof(void *), GFP_KERNEL);            | sizeof                  | alloc_cache.c                | operator
+free                    | alloc_cache.c              | void (*free)(const void *))                                                  | free                    | alloc_cache.c                | function pointer
+io_alloc_cache_free      | alloc_cache.c              | void io_alloc_cache_free(struct io_alloc_cache *cache,                        | io_alloc_cache_free      | alloc_cache.c                | function definition
+io_alloc_cache_get       | alloc_cache.c              | while ((entry = io_alloc_cache_get(cache)) != NULL)                            | io_alloc_cache_get       | alloc_cache.c                | function call
+io_alloc_cache_init      | alloc_cache.c              | bool io_alloc_cache_init(struct io_alloc_cache *cache,                        | io_alloc_cache_init      | alloc_cache.c                | function definition
+io_cache_alloc_new       | alloc_cache.c              | void *io_cache_alloc_new(struct io_alloc_cache *cache, gfp_t gfp)              | io_cache_alloc_new       | alloc_cache.c                | function definition
+kmalloc                 | alloc_cache.c              | obj = kmalloc(cache->elem_size, gfp);                                          | kmalloc                 | alloc_cache.c                | function call
+kvfree                  | alloc_cache.c              | kvfree(cache->entries);                                                       | kvfree                  | alloc_cache.c                | function call
+kvmalloc_array          | alloc_cache.c              | cache->entries = kvmalloc_array(max_nr, sizeof(void *), GFP_KERNEL);           | kvmalloc_array          | alloc_cache.c                | function call
+memset                  | alloc_cache.c              | memset(obj, 0, cache->init_clear);                                             | memset                  | alloc_cache.c                | function call
+sizeof                  | alloc_cache.c              | cache->entries = kvmalloc_array(max_nr, sizeof(void *), GFP_KERNEL);           | sizeof                  | alloc_cache.c                | operator
+void                    | alloc_cache.c              | void io_alloc_cache_free(struct io_alloc_cache *cache,                        | void                    | alloc_cache.c                | return type
+while                   | alloc_cache.c              | while ((entry = io_alloc_cache_get(cache)) != NULL)                            | while                   | alloc_cache.c                | loop
+kmalloc                 | alloc_cache.c              | obj = kmalloc(cache->elem_size, gfp);                                          | kmalloc                 | alloc_cache.c                | function call
+kvfree                  | alloc_cache.c              | kvfree(cache->entries);                                                       | kvfree                  | alloc_cache.c                | function call
+sizeof                  | alloc_cache.c              | cache->entries = kvmalloc_array(max_nr, sizeof(void *), GFP_KERNEL);           | sizeof                  | alloc_cache.c                | operator
+memset                  | alloc_cache.c             | memset(obj, 0, cache->init_clear);                                           | memset                  | alloc_cache.c                | function call
+sizeof                | alloc_cache.c              | void *                                                          | sizeof                 | alloc_cache.c                   | operator     
+while                 | alloc_cache.c              | io_alloc_cache_get(cache)                                       | while                  | alloc_cache.c                   | loop   
+kvfree                  | alloc_cache.c    | kvfree(cache->entries)                                          | kvfree                  | alloc_cache.c                   | function call   
+kvmalloc_array          | alloc_cache.c    | kvmalloc_array(max_nr, sizeof(void *), GFP_KERNEL)             | kvmalloc_array          | alloc_cache.c                   | function call    
+memset                  | alloc_cache.c    | memset(obj, 0, cache->init_clear)                               | memset                  | alloc_cache.c                   | function call 
+sizeof                  | alloc_cache.c    | sizeof(void *)                                                  | sizeof                  | alloc_cache.c                   | macro  
+while                   | alloc_cache.c    | while ((entry = io_alloc_cache_get(cache)) != NULL)           | while                   | alloc_cache.c                   | keyword 
+void                       | alloc_cache.c             | void io_alloc_cache_free(struct io_alloc_cache *cache)                       | void                       | alloc_cache.c                 | function definition     
+io_alloc_cache_free     | alloc_cache.c             | void io_alloc_cache_free(struct io_alloc_cache *cache)                      | io_alloc_cache_free     | alloc_cache.c                | function definition             
+io_alloc_cache_init     | alloc_cache.c             | bool io_alloc_cache_init(struct io_alloc_cache *cache)                      | io_alloc_cache_init     | alloc_cache.c                | function definition
+sizeof                 | alloc_cache.c             | cache->entries = kvmalloc_array(max_nr, sizeof(void *), GFP_KERNEL);         | sizeof                 | alloc_cache.c                | operator call                   
+io_alloc_cache_free | alloc_cache.h | struct io_alloc_cache* cache | io_alloc_cache_free | io_uring/alloc_cache.h | function to free cache
+io_alloc_cache_init | alloc_cache.h | struct io_alloc_cache* cache | io_alloc_cache_init | io_uring/alloc_cache.h | function to initialize cache
+io_cache_alloc_new | alloc_cache.h | struct io_alloc_cache* cache, gfp_t gfp | io_cache_alloc_new | io_uring/alloc_cache.h | function to allocate new cache
+io_alloc_cache_kasan | alloc_cache.h | struct iovec** iov, int* nr | io_alloc_cache_kasan | io_uring/alloc_cache.h | function for kasan cache allocation
+io_alloc_cache_put | alloc_cache.h | struct io_alloc_cache* cache | io_alloc_cache_put | io_uring/alloc_cache.h | function to put cache object
+io_alloc_cache_get | alloc_cache.h | struct io_alloc_cache* cache | io_alloc_cache_get | io_uring/alloc_cache.h | function to get cache object
+io_cache_alloc | alloc_cache.h | struct io_alloc_cache* cache, gfp_t gfp | io_cache_alloc | io_uring/alloc_cache.h | function to allocate from cache
+copy_from_user          | cancel.c                  | sc, arg, sizeof(sc)                                              | copy_from_user          | cancel.c                         | function parameter                
+io_ring_submit_lock     | cancel.c                  | ctx, issue_flags                                                   | io_ring_submit_lock       | cancel.c                         | function parameter                
+io_ring_submit_unlock   | cancel.c                  | ctx, issue_flags                                                   | io_ring_submit_unlock     | cancel.c                         | function parameter                
+spin_lock               | cancel.c                  | ctx->completion_lock                                               | spin_lock                 | cancel.c                         | function parameter                
+spin_unlock             | cancel.c                  | ctx->completion_lock                                               | spin_unlock               | cancel.c                         | function parameter                
+unlikely                | cancel.c                  | req->flags & REQ_F_BUFFER_SELECT                                  | unlikely                  | cancel.c                         | function parameter   
+io_slot_file          | cancel.c                   | cd->file                                                          | io_slot_file            | cancel.c                        | function definition
+list_for_each_entry   | cancel.c                   | node, ctx->tctx_list, ctx_node                                     | list_for_each_entry     | cancel.c                        | function definition
+mutex_unlock          | cancel.c                   | ctx->uring_lock                                                    | mutex_unlock            | cancel.c                        | function definition
+spin_unlock            | cancel.c                   | &ctx->completion_lock                                            | spin_unlock             | cancel.c                        | function call
+io_file_get_fixed      | cancel.c                   | req, cancel->fd                                                   | io_file_get_fixed       | cancel.c                        | function call
+io_file_get_normal     | cancel.c                   | req, cancel->fd                                                   | io_file_get_normal      | cancel.c                        | function call
+io_ring_submit_lock    | cancel.c                   | ctx, issue_flags                                                  | io_ring_submit_lock     | cancel.c                        | function call
+io_ring_submit_unlock  | cancel.c                   | ctx, issue_flags                                                  | io_ring_submit_unlock   | cancel.c                        | function call
+io_rsrc_node_lookup    | cancel.c                   | &ctx->file_table.data, fd  
+container_of              | cancel.c     | work, struct io_kiocb, work                            | container_of              | cancel.c          | macro
+io_ring_submit_lock       | cancel.c     | ctx, issue_flags                                        | io_ring_submit_lock       | cancel.c          | function call
+io_ring_submit_unlock     | cancel.c     | ctx, issue_flags                                        | io_ring_submit_unlock     | cancel.c          | function call
+io_rsrc_node_lookup       | cancel.c     | &ctx->file_table.data, fd                           | io_rsrc_node_lookup       | cancel.c          | function call
+s                         | cancel.c     | slow path comment                                    | s                        | cancel.c          | comment
+unlikely                  | cancel.c     | req->flags & REQ_F_BUFFER_SELECT                      | unlikely                  | cancel.c          | macro
+container_of               | cancel.c     | work, struct io_kiocb, work                              | container_of               | cancel.c          | macro
+copy_from_user             | cancel.c     | &sc, arg, sizeof(sc)                                     | copy_from_user             | cancel.c          | function call
+fput                       | cancel.c     | file                                                    | fput                       | cancel.c          | function call
+io_ring_submit_lock        | cancel.c     | ctx, issue_flags                                          | io_ring_submit_lock        | cancel.c          | function call
+io_ring_submit_unlock      | cancel.c     | ctx, issue_flags                                          | io_ring_submit_unlock      | cancel.c          | function call
+io_waitid_cancel          | cancel.c     | ctx, cd, issue_flags                                    | io_waitid_cancel          | cancel.c          | function call
+io_wq_current_is_worker    | cancel.c     | tctx != current->io_uring                               | io_wq_current_is_worker    | cancel.c          | function call
+spin_lock                  | cancel.c     | &ctx->completion_lock                                    | spin_lock                  | cancel.c          | function call
+spin_unlock                | cancel.c     | &ctx->completion_lock                                    | spin_unlock                | cancel.c          | function call
+container_of                   | cancel.c     | work, struct io_kiocb, work                             | container_of                   | cancel.c         | macro
+copy_from_user                 | cancel.c     | &sc, arg, sizeof(sc)                                    | copy_from_user                 | cancel.c         | function call
+DEFINE_WAIT                     | cancel.c     | wait                                                   | DEFINE_WAIT                     | cancel.c         | macro
+fget                            | cancel.c     | sc.fd                                                   | fget                            | cancel.c         | function call
+finish_wait                    | cancel.c     | &ctx->cq_wait, &wait                                   | finish_wait                    | cancel.c         | function call
+fput                           | cancel.c     | file                                                   | fput                           | cancel.c         | function call
+__io_async_cancel              | cancel.c     | cd                                                     | __io_async_cancel              | cancel.c         | function call
+io_async_cancel                | cancel.c     | req, issue_flags                                        | io_async_cancel                | cancel.c         | function call
+io_async_cancel_one            | cancel.c     | tctx, cd                                                | io_async_cancel_one            | cancel.c         | function call
+io_async_cancel_prep           | cancel.c     | req, sqe                                                | io_async_cancel_prep           | cancel.c         | function call
+io_cancel_cb                   | cancel.c     | work, data                                              | io_cancel_cb                   | cancel.c         | function call
+io_cancel_match_sequence       | cancel.c     | req, cd->seq                                            | io_cancel_match_sequence       | cancel.c         | function call
+io_cancel_req_match            | cancel.c     | req, cd                                                 | io_cancel_req_match            | cancel.c         | function call
+io_cancel_req_match    | cancel.c                  | bool io_cancel_req_match(struct io_kiocb *req, struct io_cancel_data *cd)  | io_cancel_req_match     | cancel.c                       | function definition
+io_file_get_fixed              | cancel.c     | req, cancel->fd,                                        | io_file_get_fixed              | cancel.c         | function call
+io_file_get_normal             | cancel.c     | req, cancel->fd                                         | io_file_get_normal             | cancel.c         | function call
+io_futex_cancel                | cancel.c     | ctx, cd, issue_flags                                    | io_futex_cancel                | cancel.c         | function call
+io_poll_cancel                 | cancel.c     | ctx, cd, issue_flags                                    | io_poll_cancel                 | cancel.c         | function call
+io_ring_submit_lock           | cancel.c     | ctx, issue_flags                                        | io_ring_submit_lock           | cancel.c         | function call
+io_ring_submit_unlock         | cancel.c     | ctx, issue_flags                                        | io_ring_submit_unlock         | cancel.c         | function call
+io_rsrc_node_lookup           | cancel.c     | &ctx->file_table.data, fd                               | io_rsrc_node_lookup           | cancel.c         | function call
+io_run_task_work_sig          | cancel.c     | ctx                                                   | io_run_task_work_sig          | cancel.c         | function call
+io_slot_file                  | cancel.c     | node                                                   | io_slot_file                  | cancel.c         | function call
+io_timeout_cancel              | cancel.c     | ctx, cd                                                 | io_timeout_cancel              | cancel.c         | function call
+io_try_cancel                  | cancel.c     | tctx, cd                                                | io_try_cancel                  | cancel.c         | function call
+io_try_cancel          | cancel.c                  | int io_try_cancel(struct io_uring_task *tctx, struct io_cancel_data *cd)    | io_try_cancel           | cancel.c                       | function definition
+io_waitid_cancel               | cancel.c     | ctx, cd, issue_flags                                    | io_waitid_cancel               | cancel.c         | function call
+io_wq_cancel_cb                | cancel.c     | tctx->io_wq, io_cancel_cb, cd, all                      | io_wq_cancel_cb                | cancel.c         | function call
+io_wq_current_is_worker        | cancel.c     | tctx != current->io_uring                              | io_wq_current_is_worker        | cancel.c         | function call
+ktime_add_ns                   | cancel.c     | timespec64_to_ktime(ts), ktime_get_ns()                | ktime_add_ns                   | cancel.c         | function call
+ktime_get_ns                   | cancel.c     |                                                     | ktime_get_ns                   | cancel.c         | function call
+list_for_each_entry            | cancel.c     | node, &ctx->tctx_list, ctx_node                        | list_for_each_entry            | cancel.c         | macro
+__must_hold                    | cancel.c     | &ctx->uring_lock                                       | __must_hold                    | cancel.c         | macro
+mutex_lock                     | cancel.c     | &ctx->uring_lock                                       | mutex_lock                     | cancel.c         | function call
+mutex_unlock                   | cancel.c     | &ctx->uring_lock                                       | mutex_unlock                   | cancel.c         | function call
+prepare_to_wait                | cancel.c     | &ctx->cq_wait, &wait, TASK_INTERRUPTIBLE                | prepare_to_wait                | cancel.c         | function call
+schedule_hrtimeout             | cancel.c     | &timeout, HRTIMER_MODE_ABS                             | schedule_hrtimeout             | cancel.c         | function call
+spin_lock                      | cancel.c     | &ctx->completion_lock                                  | spin_lock                      | cancel.c         | function call
+spin_unlock                    | cancel.c     | &ctx->completion_lock                                  | spin_unlock                    | cancel.c         | function call
+timespec64_to_ktime            | cancel.c     | ts, ktime_get_ns()                                     | timespec64_to_ktime            | cancel.c         | function call
+unlikely                       | cancel.c     | req->flags & REQ_F_BUFFER_SELECT                       | unlikely                       | cancel.c         | keyword
+ARRAY_SIZE                     | cancel.c     | sc.pad                                                 | ARRAY_SIZE                     | cancel.c         | macro
+atomic_inc_return              | cancel.c     | req->ctx->cancel_seq                                    | atomic_inc_return              | cancel.c         | function call
+CANCEL_FLAGS                   | cancel.c     | IORING_ASYNC_CANCEL_ALL, IORING_ASYNC_CANCEL_FD         | CANCEL_FLAGS                   | cancel.c         | macro
+container_of           | cancel.c                     | container_of(work, struct io_kiocb, work)           | container_of            | cancel.c                       | macro
+copy_from_user         | cancel.c                     | copy_from_user(&sc, arg, sizeof(sc))                | copy_from_user          | cancel.c                       | function call
+unlikely               | cancel.c                   | unlikely(req->flags & REQ_F_BUFFER_SELECT)                       | unlikely                | cancel.c                       | macro
+until                  | cancel.c                   | Keep looking until ...                                           | until                   | cancel.c                       | comment context
+u64_to_user_ptr           | epoll.c      | READ_ONCE(sqe->addr)                                   | u64_to_user_ptr           | epoll.c           | function call
+u64_to_user_ptr         | epoll.c                   | sqe->addr                                                         | 
+u64_to_user_ptr           | epoll.c                          | function parameter                
+mode                   | epoll.c                    | issue_flags, non-blocking mode                  
+common_tracking_show_fdinfo | fdinfo.c               | ctx->ring_ctx                                                     | common_tracking_show_fdinfo | fdinfo.c                    | function definition
+from_kgid_munged      | fdinfo.c                   | cred->gid                                                          | from_kgid_munged        | fdinfo.c                        | function definition
+from_kuid_munged      | fdinfo.c                   | cred->uid                                                          | from_kuid_munged        | fdinfo.c                        | function definition
+getrusage              | fdinfo.c                   | sq->thread, RUSAGE_SELF                                            | getrusage               | fdinfo.c                        | function definition
+hlist_for_each_entry   | fdinfo.c                   | req, hb->list, hash_node                                           | hlist_for_each_entry    | fdinfo.c                        | function definition
+io_uring_get_opcode   | fdinfo.c                   | sq_idx, io_uring_get_opcode(sqe->opcode), sqe->fd                  | io_uring_get_opcode     | fdinfo.c                        | function definition
+io_uring_show_cred    | fdinfo.c                   | m, id                                                             | io_uring_show_cred      | fdinfo.c                        | function definition
+io_uring_show_fdinfo  | fdinfo.c                   | m, file                                                           | io_uring_show_fdinfo    | fdinfo.c                        | function definition
+min                    | fdinfo.c                   | sq_tail - sq_head, ctx->sq_entries                                 | min                     | fdinfo.c                        | function definition
+mutex_trylock         | fdinfo.c                   | ctx->uring_lock                                                    | mutex_trylock           | fdinfo.c                        | function definition
+napi_show_fdinfo      | fdinfo.c                   | ctx->ring_ctx                                                     | napi_show_fdinfo        | fdinfo.c                        | function definition
+seq_file_path         | fdinfo.c                   | m, f, " \t\n\\"                                                    | seq_file_path           | fdinfo.c                        | function definition
+seq_printf            | fdinfo.c                   | m, "%5d\n", id                                                     | seq_printf              | fdinfo.c                        | function definition
+seq_putc              | fdinfo.c                   | m, '\n'                                                           | seq_putc                | fdinfo.c                        | function definition
+seq_put_decimal_ull   | fdinfo.c                   | m, "\tUid:\t", from_kuid_munged(uns, cred->uid)                    | seq_put_decimal_ull     | fdinfo.c                        | function definition
+seq_put_hex_ll        | fdinfo.c                   | m, NULL, cap.val, 16                                               | seq_put_hex_ll          | fdinfo.c                        | function definition
+seq_puts              | fdinfo.c                   | m, "\n\tGroups:\t"                                                 | seq_puts                | fdinfo.c                        | function definition
+seq_user_ns           | fdinfo.c                   | uns = seq_user_ns(m)                                               | seq_user_ns             | fdinfo.c                        | function definition
+task_work_pending      | fdinfo.c                   | req->tctx->task                                                   | task_work_pending       | fdinfo.c                        | function call
+xa_empty               | fdinfo.c                   | !xa_empty(&ctx->personalities)                                    | xa_empty                | fdinfo.c                        | function call
+xa_for_each            | fdinfo.c                   | &ctx->personalities, index, cred                                  | xa_for_each             | fdinfo.c                        | function call
+min                       | fdinfo.c     | sq_tail - sq_head, ctx->sq_entries                   | min                       | fdinfo.c          | macro
+io_fixed_fd_install    | filetable.c                | error value, fd                                                    | io_fixed_fd_install     | filetable.c                     | function definition
+check_add_overflow      | filetable.c          | range.off, range.len, &end                                       | check_add_overflow      | filetable.c          | function call
+bitmap_free                | filetable.c  | table->bitmap                                            | bitmap_free                | filetable.c       | function call
+bitmap_zalloc              | filetable.c  | nr_files, GFP_KERNEL_ACCOUNT                             | bitmap_zalloc              | filetable.c       | function call
+check_add_overflow         | filetable.c  | range.off, range.len, &end                               | check_add_overflow         | filetable.c       | function call
+find_next_zero_bit         | filetable.c  | table->bitmap, nr, table->alloc_hint                     | find_next_zero_bit         | filetable.c       | function call
+__io_fixed_fd_install      | filetable.c  | ctx, file                                                | __io_fixed_fd_install      | filetable.c       | function definition
+io_alloc_file_tables       | filetable.c  | ctx, table                                               | io_alloc_file_tables       | filetable.c       | function definition
+io_file_bitmap_clear       | filetable.c  | &ctx->file_table, offset                                 | io_file_bitmap_clear       | filetable.c       | function call
+io_file_bitmap_get         | filetable.c  | ctx                                                     | io_file_bitmap_get         | filetable.c       | function call
+io_file_bitmap_set         | filetable.c  | &ctx->file_table, slot_index                             | io_file_bitmap_set         | filetable.c       | function call
+io_file_table_set_alloc_range | filetable.c | ctx, range.off, range.len                                | io_file_table_set_alloc_range | filetable.c    | function call
+io_fixed_fd_install        | filetable.c  | error value                                             | io_fixed_fd_install        | filetable.c       | function call
+io_fixed_fd_remove         | filetable.c  | ctx, offset                                              | io_fixed_fd_remove         | filetable.c       | function definition
+io_fixed_file_set          | filetable.c  | node, file                                               | io_fixed_file_set          | filetable.c       | function call
+io_free_file_tables        | filetable.c  | ctx, table                                               | io_free_file_tables        | filetable.c       | function definition
+io_install_fixed_file      | filetable.c  | ctx, file                                                | io_install_fixed_file      | filetable.c       | function call
+io_is_uring_fops           | filetable.c  | file                                                    | io_is_uring_fops           | filetable.c       | function call
+io_register_file_alloc_range | filetable.c | ctx, ...                                                 | io_register_file_alloc_range | filetable.c    | function call
+io_reset_rsrc_node         | filetable.c  | ctx, &ctx->file_table.data, slot_index                   | io_reset_rsrc_node         | filetable.c       | function call
+io_rsrc_data_alloc         | filetable.c  | &table->data, nr_files                                    | io_rsrc_data_alloc         | filetable.c       | function call
+io_rsrc_data_free          | filetable.c  | ctx, &table->data                                         | io_rsrc_data_free          | filetable.c       | function definition
+io_rsrc_data_free          | filetable.c       | function call
+io_rsrc_node_alloc         | filetable.c  | IORING_RSRC_FILE                                          | io_rsrc_node_alloc         | filetable.c       | function call
+io_is_uring_fops               | filetable.c  | file                                                  | io_is_uring_fops               | filetable.c       | function call
+__io_fixed_fd_install          | filetable.c  | ctx, file                                              | __io_fixed_fd_install          | filetable.c       | function call
+getname_uflags               | fs.c         | oldf, lnk->flags                                         | getname_uflags               | fs.c              | function call
+putname                      | fs.c         | ren->oldpath                                             | putname                      | fs.c              | function call
+do_linkat              | fs.c                         | do_linkat(lnk->old_dfd, ...)                        | do_linkat               | fs.c                           | function call
+do_mkdirat             | fs.c                         | do_mkdirat(mkd->dfd, ...)                           | do_mkdirat              | fs.c                           | function call
+do_renameat2           | fs.c                         | do_renameat2(ren->old_dfd, ...)                     | do_renameat2            | fs.c                           | function call
+do_rmdir               | fs.c                         | do_rmdir(un->dfd, ...)                              | do_rmdir                | fs.c                           | function call
+do_symlinkat           | fs.c                         | do_symlinkat(sl->oldpath, ...)                      | do_symlinkat            | fs.c                           | function call
+do_unlinkat            | fs.c                         | do_unlinkat(un->dfd, ...)                           | do_unlinkat             | fs.c                           | function call
+getname                | fs.c                         | getname(oldf)                                       | getname                 | fs.c                           | function call
+getname_uflags         | fs.c                         | getname_uflags(oldf, flags)                         | getname_uflags          | fs.c                           | function call
+io_link_cleanup        | fs.c                         | io_link_cleanup(req)                                | io_link_cleanup         | fs.c                           | function definition
+io_linkat              | fs.c                         | io_linkat(req, flags)                               | io_linkat               | fs.c                           | function definition
+io_linkat_prep         | fs.c                         | io_linkat_prep(req, sqe)                            | io_linkat_prep          | fs.c                           | function definition
+io_mkdirat             | fs.c                         | io_mkdirat(req, flags)                              | io_mkdirat              | fs.c                           | function definition
+io_mkdirat_cleanup     | fs.c                         | io_mkdirat_cleanup(req)                             | io_mkdirat_cleanup      | fs.c                           | function definition
+io_mkdirat_prep        | fs.c                         | io_mkdirat_prep(req, sqe)                           | io_mkdirat_prep         | fs.c                           | function definition
+io_renameat            | fs.c                         | io_renameat(req, flags)                             | io_renameat             | fs.c                           | function definition
+io_renameat_cleanup    | fs.c                         | io_renameat_cleanup(req)                            | io_renameat_cleanup     | fs.c                           | function definition
+io_renameat_prep       | fs.c                         | io_renameat_prep(req, sqe)                          | io_renameat_prep        | fs.c                           | function definition
+io_symlinkat           | fs.c                         | io_symlinkat(req, flags)                            | io_symlinkat            | fs.c                           | function definition
+io_symlinkat_prep      | fs.c                         | io_symlinkat_prep(req, sqe)                         | io_symlinkat_prep       | fs.c                           | function definition
+io_unlinkat            | fs.c                         | io_unlinkat(req, flags)                             | io_unlinkat             | fs.c                           | function definition
+io_unlinkat_cleanup    | fs.c                         | io_unlinkat_cleanup(req)                            | io_unlinkat_cleanup     | fs.c                           | function definition
+io_unlinkat_prep       | fs.c                         | io_unlinkat_prep(req, sqe)                          | io_unlinkat_prep        | fs.c                           | function definition
+putname                | fs.c                         | putname(ren->oldpath)                               | putname                 | fs.c                           | function call
+lockdep_assert_held     | futex.c                   | ctx->uring_lock                                                   | lockdep_assert_held       | futex.c                          | function parameter                
+hlist_del_init            | futex.c      | &req->hash_node                                        | hlist_del_init            | futex.c           | function call
+hlist_for_each_entry_safe | futex.c      | req, tmp, &ctx->futex_list, hash_node                 | hlist_for_each_entry_safe | futex.c           | function call
+io_match_task_safe        | futex.c      | req, tctx, cancel_all                                  | io_match_task_safe        | futex.c           | function call
+io_req_task_complete      | futex.c      | req, ts                                                | io_req_task_complete      | futex.c           | function call
+io_req_task_work_add      | futex.c      | req                                                    | io_req_task_work_add      | futex.c           | function call
+io_tw_lock             | futex.c                   | io_tw_lock(ctx, ts)                                                      | io_tw_lock              | futex.c                        | function call
+io_req_task_complete   | futex.c                   | io_req_task_complete(req, ts)                                             | io_req_task_complete    | futex.c                        | function call
+io_req_task_work_add   | futex.c                   | io_req_task_work_add(req)                                                 | io_req_task_work_add    | futex.c                        | function call
+__set_current_state    | futex.c                    | __set_current_state(TASK_RUNNING)                                | __set_current_state     | futex.c                        | macro/function
+io_req_task_complete   | futex.c                      | req, ts                                             | io_req_task_complete    | futex.c                        | function call
+lockdep_assert_held    | futex.c                    | lockdep_assert_held(&ctx->uring_lock)                            | lockdep_assert_held     | futex.c                        | macro
+successful             | futex.c                    | successful setup, then the task ...                              | successful              | futex.c                        | comment context
+atomic_or                 | io-wq.c      | IO_WQ_WORK_CANCEL, &work->flags                        | atomic_or                 | io-wq.c           | function call
+atomic_read               | io-wq.c      | &work->flags                                           | atomic_read               | io-wq.c           | function call
+list_del_init              | io-wq.c      | &wq->wait.entry                                          | list_del_init              | io-wq.c           | function call
+spin_lock_irq              | io-wq.c      | &wq->hash->wait.lock                                     | spin_lock_irq              | io-wq.c           | function call
+spin_unlock_irq            | io-wq.c      | &wq->hash->wait.lock                                     | spin_unlock_irq            | io-wq.c           | function call
+init_task_work                 | io-wq.c      | &worker->create_work, func                            | init_task_work                 | io-wq.c           | function call
+BUILD_BUG_ON                    | io-wq.c      | (int) IO_WQ_ACCT_BOUND != (int) IO_WQ_BOUND             | BUILD_BUG_ON                    | io-wq.c           | macro
+ERR_PTR                | io-wq.c                   | return ERR_PTR(-EINVAL)                                                  | ERR_PTR                 | io-wq.c                        | function call
+INIT_LIST_HEAD         | io-wq.c                   | INIT_LIST_HEAD(&wq->wait.entry)                                           | INIT_LIST_HEAD          | io-wq.c                        | macro
+list_del_init          | io-wq.c                   | list_del_init(&wq->wait.entry)                                            | list_del_init           | io-wq.c                        | function call
+list_empty             | io-wq.c                   | if (list_empty(&wq->wait.entry))                                          | list_empty              | io-wq.c                        | function call
+atomic_read            | io-wq.c                   | return io_get_acct(wq, !(atomic_read(&work->flags) & IO_WQ_WORK_UNBOUND))   | atomic_read             | io-wq.c                        | function call
+complete               | io-wq.c                      | complete(&worker->ref_done)                         | complete                | io-wq.c                        | function call
+INIT_LIST_HEAD         | io-wq.c                      | INIT_LIST_HEAD(&wq->wait.entry)                     | INIT_LIST_HEAD          | io-wq.c                        | macro
+likely                 | io-wq.c                    | Most likely an attempt ...                                       | likely                  | io-wq.c                        | macro
+list_del_init          | io-wq.c                    | list_del_init(&wq->wait.entry)                                   | list_del_init           | io-wq.c                        | function call
+set_current_state      | io-wq.c                    | set_current_state(TASK_INTERRUPTIBLE)                            | set_current_state       | io-wq.c                        | function call
+wq_list_cut            | io-wq.c                    | wq_list_cut(&acct->work_list, ...)                               | wq_list_cut             | io-wq.c                        | function call
+wq_list_empty          | io-wq.c                    | !wq_list_empty(&acct->work_list)                                 | wq_list_empty           | io-wq.c                        | function call
+wq_list_for_each       | io-wq.c                    | wq_list_for_each(node, prev, ...)                                | wq_list_for_each        | io-wq.c                        | macro
+BUG_ON                          | io_uring.c   | !tctx                                                 | BUG_ON                          | io_uring.c        | macro
+io_add_aux_cqe                 | io_uring.c   | ctx, user_data, res, cflags                           | io_add_aux_cqe                 | io_uring.c        | function call
+io_post_aux_cqe                | io_uring.c   | ctx, user_data, res, cflags                           | io_post_aux_cqe                | io_uring.c        | function call
+PAGE_ALIGN                | io_uring.c   | size                                                 | PAGE_ALIGN               | io_uring.c        | macro
+hlist_add_head            | io_uring.c   | user_access_end()                                      | hlist_add_head            | io_uring.c        | function call
+init_waitqueue_func_entry | io_uring.c   | &iowq.wq, io_wake_function                            | init_waitqueue_func_entry | io_uring.c        | function call
+io_req_post_cqe           | io_uring.c   | req, res, cflags                                    | io_req_post_cqe           | io_uring.c        | function definition
+unsafe_get_user           | io_uring.c   | arg.sigmask, &uarg->sigmask, uaccess_end               | unsafe_get_user           | io_uring.c        | function call
+user_access_begin         | io_uring.c   | uarg, sizeof(*uarg)                                    | user_access_begin         | io_uring.c        | function call
+io_uring_optable_init           | io_uring.c   |                                                     | io_uring_optable_init           | io_uring.c        | function call
+kmem_cache_alloc               | io_uring.c   | req_cachep, gfp                                         | kmem_cache_alloc               | io_uring.c        | function call
+kmem_cache_free                | io_uring.c   | req_cachep, req                                         | kmem_cache_free                | io_uring.c        | function call
+percpu_ref_get                 | io_uring.c   | ctx->refs                                               | percpu_ref_get                 | io_uring.c        | function call
+percpu_ref_put                 | io_uring.c   | ctx->refs                                               | percpu_ref_put                 | io_uring.c        | function call
+prep                            | io_uring.c   | linked timeouts should have two refs once prep'ed      | prep                            | io_uring.c        | comment
+io_disarm_next         | io-uring.c                | /* requests with any of those set should undergo io_disarm_next() */       | io_disarm_next          | io-uring.c                     | function call
+io_flush_timeouts      | io-uring.c                | io_flush_timeouts(ctx)                                                    | io_flush_timeouts       | io-uring.c                     | function call
+io_for_each_link       | io-uring.c                | io_for_each_link(req, head)                                               | io_for_each_link        | io-uring.c                     | function call
+io_free_req            | io-uring.c                | __cold void io_free_req(struct io_kiocb *req)                              | io_free_req             | io-uring.c                     | function call
+io_kill_timeouts       | io-uring.c                | ret |= io_kill_timeouts(ctx, tctx, cancel_all);                           | io_kill_timeouts        | io-uring.c                     | function call
+io_match_task          | io-uring.c                | * As io_match_task() but protected against racing with linked timeouts.     | io_match_task           | io-uring.c                     | function call
+io_queue_linked_timeout | io-uring.c               | io_queue_linked_timeout(__io_prep_linked_timeout(req))                     | io_queue_linked_timeout  | io-uring.c                     | function call
+io_queue_next          | io-uring.c                | void io_queue_next(struct io_kiocb *req)                                   | io_queue_next           | io-uring.c                     | function call
+io_req_post_cqe        | io-uring.c                | bool io_req_post_cqe(struct io_kiocb *req, s32 res, u32 cflags)           | io_req_post_cqe         | io-uring.c                     | function call
+io_should_terminate_tw | io-uring.c                | if (unlikely(io_should_terminate_tw()))                                    | io_should_terminate_tw  | io-uring.c                     | function call
+LIST_HEAD              | io-uring.c                | LIST_HEAD(list)                                                           | LIST_HEAD               | io_uring.c                     | macro
+list_add_tail          | io-uring.c                | list_add_tail(&ocqe->list, &ctx->cq_overflow_list)                        | list_add_tail           | io-uring.c                     | function call
+list_del               | io-uring.c                | list_del(&ocqe->list)                                                     | list_del                | io-uring.c                     | function call
+list_first_entry       | io-uring.c                | struct io_defer_entry *de = list_first_entry(&ctx->defer_list)            | list_first_entry        | io_uring.c                     | function call
+raw_spin_lock_irq      | io-uring.c                | raw_spin_lock_irq(&ctx->timeout_lock)                                     | raw_spin_lock_irq       | io_uring.c                     | function call
+raw_spin_unlock_irq    | io-uring.c                | raw_spin_unlock_irq(&ctx->timeout_lock)                                   | raw_spin_unlock_irq     | io_uring.c                     | function call
+get_timespec64         | io-uring.c                | if (get_timespec64(&ext_arg->ts, u64_to_user_ptr(arg.ts)))                | get_timespec64          | io-uring.c                     | function call
+destroy_hrtimer_on_stack | io_uring.c                | destroy_hrtimer_on_stack(&iowq->t)                  | destroy_hrtimer_on_stack | io_uring.c                   | function call
+file_inode             | io_uring.c                   | file_inode(req->file)                               | file_inode              | io_uring.c                     | function call
+hrtimer_cancel         | io_uring.c                   | hrtimer_cancel(&iowq->t)                            | hrtimer_cancel          | io_uring.c                     | function call
+hrtimer_set_expires    | io_uring.c                   | hrtimer_set_expires(timer, ...)                     | hrtimer_set_expires     | io_uring.c                     | function call
+io_do_iopoll           | io_uring.c                   | io_do_iopoll(ctx, true)                             | io_do_iopoll            | io_uring.c                     | function call
+io_file_can_poll       | io_uring.c                   | io_file_can_poll(req, ...)                          | io_file_can_poll        | io_uring.c                     | function call
+io_kbuf_recycle         | io_uring.c                | io_kbuf_recycle(req, 0)                                          | io_kbuf_recycle         | io_uring.c                     | function call
+io_put_kbuf             | io_uring.c                | io_req_set_res(req, res, io_put_kbuf(...))                       | io_put_kbuf             | io_uring.c                     | function call
+io_req_post_cqe        | io_uring.c                   | struct io_kiocb *req, s32 res, u32 cflags           | io_req_post_cqe         | io_uring.c                     | function definition
+io_req_task_queue      | io_uring.c                   | de->req                                             | io_req_task_queue       | io_uring.c                     | function call
+io_rw_cache_free       | io_uring.c                   | io_alloc_cache_free(...)                            | io_rw_cache_free        | io_uring.c                     | function reference
+iopoll                  | io_uring.c                   | ctx->flags & IORING_SETUP_IOPOLL                                 | iopoll                  | io_uring.c                     | condition flag (bitfield)
+S_ISBLK                | io_uring.c                 | !S_ISBLK(file_inode(req->file)->i_mode)                          | S_ISBLK                 | io_uring.c                     | macro
+S_ISREG                | io_uring.c                 | S_ISREG(file_inode(file)->i_mode)                                | S_ISREG                 | io_uring.c                     | macro
+smp_load_acquire       | io_uring.c                 | smp_load_acquire to read the tail                                | smp_load_acquire        | io_uring.c                     | macro
+smp_store_release      | io_uring.c                 | smp_store_release to                                             | smp_store_release       | io_uring.c                     | macro
+__io_req_task_work_add | io_uring.c                   | void __io_req_task_work_add(...)                    | __io_req_task_work_add  | io_uring.c                     | function definition
+struct io_buffer        | kbuf.c                    | buffer data, flags, memory                                       | io_add_buffers            | kbuf.c                           | function parameter, local variable
+struct io_buffer_list   | kbuf.c                    | memory region, buffer data, refcount                              | io_buffer_get_list        | kbuf.c                           | local variable                    
+struct io_ring_ctx      | kbuf.c                    | context, number of buffers                                        | io_buffer_select          | kbuf.c                           | return value, local variable      
+io_kbuf_commit          | kbuf.c                    | req, bl, len, flags                                                | io_kbuf_commit            | kbuf.c                           | function parameter                
+io_kbuf_recycle_legacy  | kbuf.c                    | req, issue_flags                                                   | io_kbuf_recycle_legacy    | kbuf.c                           | function parameter                
+kmalloc_array           | kbuf.c                    | nr_avail, size                                                   | kmalloc_array             | kbuf.c                           | function parameter                
+list_add                | kbuf.c                    | buf, bl                                                           | list_add                  | kbuf.c                           | function parameter                
+list_entry              | kbuf.c                    | item, io_buffer                                                    | list_entry                | kbuf.c                           | function parameter                
+list_for_each_safe      | kbuf.c                    | item, tmp, ctx->io_buffers_cache                                   | list_for_each_safe        | kbuf.c                           | function parameter                
+list_move               | kbuf.c                    | nxt, ctx->io_buffers_cache                                        | list_move                 | kbuf.c                           | function parameter                
+list_move_tail          | kbuf.c                    | buf, bl                                                           | list_move_tail            | kbuf.c                           | function parameter                
+list_splice_init        | kbuf.c                    | ctx->io_buffers_comp, ctx->io_buffers_cache                       | list_splice_init          | kbuf.c                           | function parameter                
+MAX_BIDS_PER_BGID       | kbuf.c                    | (1 << 16)                                                         | MAX_BIDS_PER_BGID         | kbuf.c                           | macro                             
+min_not_zero            | kbuf.c                    | needed                                                            | min_not_zero              | kbuf.c                           | function parameter                
+min_t                   | kbuf.c                    | tail, head, UIO_MAXIOV                                            | min_t                     | kbuf.c                           | function parameter                
+io_pbuf_get_region      | kbuf.c                    | ctx, region                                                      | io_pbuf_get_region        | kbuf.c                           | function parameter                
+io_provide_buffers      | kbuf.c                    | req, issue_flags                                                   | io_provide_buffers        | kbuf.c                           | function parameter                
+io_provide_buffers_prep | kbuf.c                    | req, sqe                                                          | io_provide_buffers_prep   | kbuf.c                           | function parameter                
+io_provided_buffer_select| kbuf.c                  | req, len                                                          | io_provided_buffer_select | kbuf.c                           | function parameter                
+io_provided_buffers_select| kbuf.c                 | req, len                                                          | io_provided_buffers_select| kbuf.c                           | function parameter                
+io_put_bl               | kbuf.c                    | ctx, bl                                                           | io_put_bl                 | kbuf.c                           | function parameter                
+__io_put_kbuf           | kbuf.c                    | req, len, issue_flags                                              | __io_put_kbuf             | kbuf.c                           | function parameter                
+__io_put_kbuf_list      | kbuf.c                    | req, len, io_buffers_comp                                          | __io_put_kbuf_list        | kbuf.c                           | function parameter                
+io_refill_buffer_cache  | kbuf.c                    | ctx                                                               | io_refill_buffer_cache    | kbuf.c                           | function parameter                
+io_register_pbuf_ring   | kbuf.c                    | ctx, arg                                                           | io_register_pbuf_ring     | kbuf.c                           | function parameter                
+io_register_pbuf_status  | kbuf.c                    | ctx, arg                                                           | io_register_pbuf_status   | kbuf.c                           | function parameter                
+__io_remove_buffers     | kbuf.c                    | ctx                                                               | __io_remove_buffers       | kbuf.c                           | function parameter                
+io_remove_buffers       | kbuf.c                    | req, issue_flags                                                   | io_remove_buffers         | kbuf.c                           | function parameter                
+io_remove_buffers_prep  | kbuf.c                    | req, sqe                                                          | io_remove_buffers_prep    | kbuf.c                           | function parameter                
+io_ring_buffer_select  | kbuf.c                    | req, len                                                          | io_ring_buffer_select     | kbuf.c                           | function parameter                
+io_ring_buffers_peek   | kbuf.c                    | req, arg                                                          | io_ring_buffers_peek      | kbuf.c                           | function parameter                
+io_ring_head_to_buf    | kbuf.c                    | br, head, mask                                                    | io_ring_head_to_buf       | kbuf.c                           | function parameter                
+io_unregister_pbuf_ring | kbuf.c                   | ctx, arg                                                           | io_unregister_pbuf_ring   | kbuf.c                           | function parameter                
+is_power_of_2           | kbuf.c                    | reg                                                               | is_power_of_2             | kbuf.c                           | function parameter                
+scoped_guard            | kbuf.c                    | mutex, ctx->mmap_lock                                             | scoped_guard              | kbuf.c                           | function parameter                
+xa_erase                | kbuf.c                    | ctx->io_bl_xa, bl->bgid                                            | xa_erase                  | kbuf.c                           | function parameter                
+xa_err                  | kbuf.c                    | xa_store, ctx->io_bl_xa                                            | xa_err                    | kbuf.c                           | function parameter                
+xa_find                 | kbuf.c                    | ctx->io_bl_xa, index, ULONG_MAX                                    | xa_find                   | kbuf.c                           | function parameter                
+xa_store                | kbuf.c                    | ctx->io_bl_xa, bgid, bl                                           | xa_store                  | kbuf.c                           | function parameter        
+access_ok               | kbuf.c               | u64_to_user_ptr(p->addr), size                                   | access_ok               | kbuf.c               | function call
+io_buffer_select       | kbuf.c                     | req, len                                                         | io_buffer_select        | kbuf.c                          | function definition
+io_buffers_peek        | kbuf.c                     | req, arg                                                         | io_buffers_peek         | kbuf.c                          | function definition
+io_buffers_select      | kbuf.c                     | req, arg                                                         | io_buffers_select       | kbuf.c                          | function definition                     
+min_not_zero              | kbuf.c       | needed, PEEK_MAX_IMPORT                              | min_not_zero              | kbuf.c            | macro
+min_t                     | kbuf.c       | tail - head, UIO_MAXIOV                              | min_t                     | kbuf.c            | macro
+list_add               | kbuf.c                    | list_add(&buf->list, &bl->buf_list)                                        | list_add                | kbuf.c                         | function call
+list_entry             | kbuf.c                    | buf = list_entry(item, struct io_buffer, list)                             | list_entry              | kbuf.c                         | function call
+list_move_tail         | kbuf.c                    | list_move_tail(&buf->list, &bl->buf_list)                                  | list_move_tail          | kbuf.c                         | function call
+access_ok              | kbuf.c                       | access_ok(u64_to_user_ptr(...), size)              | access_ok               | kbuf.c                         | function call
+io_buffer_select       | kbuf.c                       | io_buffer_select(req, len)                          | io_buffer_select        | kbuf.c                         | function call
+io_uring_fill_params|io_uring/io_uring.h|unsigned entries, struct io_uring_params *p|io_uring_fill_params|io_uring/io_uring.h|fills user-provided io_uring_params during setup
+io_cqe_cache_refill|io_uring/io_uring.h|struct io_ring_ctx *ctx, bool overflow|io_cqe_cache_refill|io_uring/io_uring.h|refills completion queue entry cache
+io_run_task_work_sig|io_uring/io_uring.h|struct io_ring_ctx *ctx|io_run_task_work_sig|io_uring/io_uring.h|runs deferred task work with signal
+io_req_defer_failed|io_uring/io_uring.h|struct io_kiocb *req, s32 res|io_req_defer_failed|io_uring/io_uring.h|handles request failure after deferral
+io_post_aux_cqe|io_uring/io_uring.h|struct io_ring_ctx *ctx, u64 user_data, s32 res, u32 cflags|io_post_aux_cqe|io_uring/io_uring.h|posts an auxiliary completion queue entry
+io_add_aux_cqe|io_uring/io_uring.h|struct io_ring_ctx *ctx, u64 user_data, s32 res, u32 cflags|io_add_aux_cqe|io_uring/io_uring.h|adds auxiliary CQE to ring
+io_req_post_cqe|io_uring/io_uring.h|struct io_kiocb *req, s32 res, u32 cflags|io_req_post_cqe|io_uring/io_uring.h|posts completion result for request
+__io_commit_cqring_flush|io_uring/io_uring.h|struct io_ring_ctx *ctx|__io_commit_cqring_flush|io_uring/io_uring.h|flushes the CQ ring to user
+io_file_get_normal|io_uring/io_uring.h|struct io_kiocb *req, int fd|io_file_get_normal|io_uring/io_uring.h|gets normal (non-fixed) file from fd
+io_file_get_fixed|io_uring/io_uring.h|struct io_kiocb *req, int fd, struct file **f|io_file_get_fixed|io_uring/io_uring.h|retrieves file from fixed index
+__io_req_task_work_add|io_uring/io_uring.h|struct io_kiocb *req, unsigned flags|__io_req_task_work_add|io_uring/io_uring.h|adds task work to the task queue
+io_req_task_work_add_remote|io_uring/io_uring.h|struct io_kiocb *req, struct io_ring_ctx *ctx, unsigned flags|io_req_task_work_add_remote|io_uring/io_uring.h|adds task work to remote task
+io_alloc_async_data|io_uring/io_uring.h|struct io_kiocb *req|io_alloc_async_data|io_uring/io_uring.h|allocates async data for request
+io_req_task_queue|io_uring/io_uring.h|struct io_kiocb *req|io_req_task_queue|io_uring/io_uring.h|queues task work for request
+io_req_task_complete|io_uring/io_uring.h|struct io_kiocb *req, struct io_tw_state *ts|io_req_task_complete|io_uring/io_uring.h|completes task request
+io_req_task_queue_fail|io_uring/io_uring.h|struct io_kiocb *req, int ret|io_req_task_queue_fail|io_uring/io_uring.h|queues a failed task request
+io_req_task_submit|io_uring/io_uring.h|struct io_kiocb *req, struct io_tw_state *ts|io_req_task_submit|io_uring/io_uring.h|submits a task request
+io_handle_tw_list|io_uring/io_uring.h|struct llist_node *node, unsigned int *count, unsigned int max_entries|io_handle_tw_list|io_uring/io_uring.h|handles task work list
+tctx_task_work_run|io_uring/io_uring.h|struct io_uring_task *tctx, unsigned int max_entries, unsigned int *count|tctx_task_work_run|io_uring/io_uring.h|runs task work for a given task context
+tctx_task_work|io_uring/io_uring.h|struct callback_head *cb|tctx_task_work|io_uring/io_uring.h|entry point for task work processing
+io_uring_cancel_generic|io_uring/io_uring.h|bool cancel_all, struct io_sq_data *sqd|io_uring_cancel_generic|io_uring/io_uring.h|cancels all requests if needed
+io_uring_alloc_task_context|io_uring/io_uring.h|struct task_struct *task, struct io_ring_ctx *ctx|io_uring_alloc_task_context|io_uring/io_uring.h|allocates io_uring context for a task
+io_ring_add_registered_file|io_uring/io_uring.h|struct io_uring_task *tctx, struct file *file, u32 index|io_ring_add_registered_file|io_uring/io_uring.h|adds file to registered list
+io_req_queue_iowq|io_uring/io_uring.h|struct io_kiocb *req|io_req_queue_iowq|io_uring/io_uring.h|queues request to io worker queue
+io_poll_issue|io_uring/io_uring.h|struct io_kiocb *req, struct io_tw_state *ts|io_poll_issue|io_uring/io_uring.h|issues a poll-type request
+io_submit_sqes|io_uring/io_uring.h|struct io_ring_ctx *ctx, unsigned int nr|io_submit_sqes|io_uring/io_uring.h|submits a batch of SQEs
+io_do_iopoll|io_uring/io_uring.h|struct io_ring_ctx *ctx, bool force_nonspin|io_do_iopoll|io_uring/io_uring.h|performs I/O polling
+__io_submit_flush_completions|io_uring/io_uring.h|struct io_ring_ctx *ctx|__io_submit_flush_completions|io_uring/io_uring.h|flushes completion ring entries
+io_wq_free_work|io_uring/io_uring.h|struct io_wq_work *work|io_wq_free_work|io_uring/io_uring.h|frees an io_wq_work structure
+io_wq_submit_work|io_uring/io_uring.h|struct io_wq_work *work|io_wq_submit_work|io_uring/io_uring.h|submits io_wq work
+io_free_req|io_uring/io_uring.h|struct io_kiocb *req|io_free_req|io_uring/io_uring.h|frees a request
+io_queue_next|io_uring/io_uring.h|struct io_kiocb *req|io_queue_next|io_uring/io_uring.h|queues the next request in chain
+io_task_refs_refill|io_uring/io_uring.h|struct io_uring_task *tctx|io_task_refs_refill|io_uring/io_uring.h|refills task ref counters
+__io_alloc_req_refill|io_uring/io_uring.h|struct io_ring_ctx *ctx|__io_alloc_req_refill|io_uring/io_uring.h|refills internal request pool
+io_match_task_safe|io_uring/io_uring.h|struct io_kiocb *head, struct io_uring_task *tctx, bool cancel_all|io_match_task_safe|io_uring/io_uring.h|matches tasks safely for cancellation
+io_activate_pollwq|io_uring/io_uring.h|struct io_ring_ctx *ctx|io_activate_pollwq|io_uring/io_uring.h|activates polling worker queue
+o_renameat_prep | io_uring/fs.h | struct io_kiocb*, struct io_uring_sqe* | io_renameat_prep | io_uring/fs.h | function parameter
+io_renameat    | io_uring/fs.h | struct io_kiocb*, unsigned int | io_renameat | io_uring/fs.h | function parameter
+io_renameat_cleanup | io_uring/fs.h | struct io_kiocb* | io_renameat_cleanup | io_uring/fs.h | function parameter
+io_unlinkat_prep | io_uring/fs.h | struct io_kiocb*, struct io_uring_sqe* | io_unlinkat_prep | io_uring/fs.h | function parameter
+io_unlinkat    | io_uring/fs.h | struct io_kiocb*, unsigned int | io_unlinkat | io_uring/fs.h | function parameter
+io_unlinkat_cleanup | io_uring/fs.h | struct io_kiocb* | io_unlinkat_cleanup | io_uring/fs.h | function parameter
+io_mkdirat_prep | io_uring/fs.h | struct io_kiocb*, struct io_uring_sqe* | io_mkdirat_prep | io_uring/fs.h | function parameter
+io_mkdirat     | io_uring/fs.h | struct io_kiocb*, unsigned int | io_mkdirat | io_uring/fs.h | function parameter
+io_mkdirat_cleanup | io_uring/fs.h | struct io_kiocb* | io_mkdirat_cleanup | io_uring/fs.h | function parameter
+io_symlinkat_prep | io_uring/fs.h | struct io_kiocb*, struct io_uring_sqe* | io_symlinkat_prep | io_uring/fs.h | function parameter
+io_symlinkat   | io_uring/fs.h | struct io_kiocb*, unsigned int | io_symlinkat | io_uring/fs.h | function parameter
+io_linkat_prep | io_uring/fs.h | struct io_kiocb*, struct io_uring_sqe* | io_linkat_prep | io_uring/fs.h | function parameter
+io_linkat      | io_uring/fs.h | struct io_kiocb*, unsigned int | io_linkat | io_uring/fs.h | function parameter
+io_link_cleanup | io_uring/fs.h | struct io_kiocb* | io_link_cleanup | io_uring/fs.h | function parameter
+io_wq          | io_uring/io-wq.h | - | io_wq | io_uring/io-wq.h | structure for I/O work queue
+io_wq_work_fn  | io_uring/io-wq.h | typedef for function pointer | io_wq_work_fn | io_uring/io-wq.h | function pointer type for work function
+free_work_fn   | io_uring/io-wq.h | typedef for function pointer | free_work_fn | io_uring/io-wq.h | function pointer type for freeing work
+io_wq_hash     | io_uring/io-wq.h | struct wait_queue_head wait | io_wq_hash | io_uring/io-wq.h | structure for managing I/O work queue hash
+io_wq_data     | io_uring/io-wq.h | struct io_wq_hash* hash, struct task_struct* task | io_wq_data | io_uring/io-wq.h | structure for managing I/O work queue data
+io_wq_create   | io_uring/io-wq.h | unsigned bounded, struct io_wq_data* data | io_wq_create | io_uring/io-wq.h | function for creating an I/O work queue
+io_wq_exit_start | io_uring/io-wq.h | struct io_wq* | io_wq_exit_start | io_uring/io-wq.h | function to start I/O work queue exit
+io_wq_put_and_exit | io_uring/io-wq.h | struct io_wq* | io_wq_put_and_exit | io_uring/io-wq.h | function to put and exit I/O work queue
+io_wq_enqueue  | io_uring/io-wq.h | struct io_wq* wq, struct io_wq_work* work | io_wq_enqueue | io_uring/io-wq.h | function for enqueueing work in I/O work queue
+io_wq_hash_work | io_uring/io-wq.h | struct io_wq_work* work, void* val | io_wq_hash_work | io_uring/io-wq.h | function for hashing work in I/O work queue
+io_wq_cpu_affinity | io_uring/io-wq.h | struct io_uring_task* tctx, cpumask_var_t mask | io_wq_cpu_affinity | io_uring/io-wq.h | function for setting CPU affinity for I/O work queue
+io_wq_max_workers | io_uring/io-wq.h | struct io_wq* wq, int* new_count | io_wq_max_workers | io_uring/io-wq.h | function for setting maximum number of workers in I/O work queue
+io_wq_is_hashed | io_uring/io-wq.h | struct io_wq_work* work | io_wq_is_hashed | io_uring/io-wq.h | function to check if work is hashed in I/O work queue
+work_cancel_fn | io_uring/io-wq.h | typedef for function pointer | work_cancel_fn | io_uring/io-wq.h | function pointer type for canceling work
+io_wq_cancel_cb | io_uring/io-wq.h | struct io_wq* wq, work_cancel_fn* cancel | io_wq_cancel_cb | io_uring/io-wq.h | function for canceling work in I/O work queue
+io_wq_worker_sleeping | io_uring/io-wq.h | struct task_struct* tsk | io_wq_worker_sleeping | io_uring/io-wq.h | function for worker sleeping state
+io_wq_worker_running | io_uring/io-wq.h | struct task_struct* tsk | io_wq_worker_running | io_uring/io-wq.h | function for worker running state
+io_futex_prep | io_uring/futex.h | struct io_kiocb*, struct io_uring_sqe* | io_futex_prep | io_uring/futex.h | function to prepare futex operation
+io_futexv_prep | io_uring/futex.h | struct io_kiocb*, struct io_uring_sqe* | io_futexv_prep | io_uring/futex.h | function to prepare futexv operation
+io_futex_wait | io_uring/futex.h | struct io_kiocb*, unsigned int | io_futex_wait | io_uring/futex.h | function to perform futex wait operation
+io_futexv_wait | io_uring/futex.h | struct io_kiocb*, unsigned int | io_futexv_wait | io_uring/futex.h | function to perform futexv wait operation
+io_futex_wake | io_uring/futex.h | struct io_kiocb*, unsigned int | io_futex_wake | io_uring/futex.h | function to perform futex wake operation
+io_futex_cancel | io_uring/futex.h | struct io_ring_ctx* ctx, struct io_cancel_data* cd | io_futex_cancel | io_uring/futex.h | function to cancel futex operation
+io_futex_remove_all | io_uring/futex.h | struct io_ring_ctx* ctx, struct io_uring_task* tctx, bool cancel_all | io_futex_remove_all | io_uring/futex.h | function to remove all futex operations
+io_futex_cache_init | io_uring/futex.h | struct io_ring_ctx* ctx | io_futex_cache_init | io_uring/futex.h | function to initialize futex cache
+io_futex_cache_free | io_uring/futex.h | struct io_ring_ctx* ctx | io_futex_cache_free | io_uring/futex.h | function to free futex cache
+io_buffer_list | io_uring/kbuf.h | struct list_head buf_list, struct io_uring_buf_ring* buf_ring | io_buffer_list | io_uring/kbuf.h | structure for managing a list of buffers
+io_buffer | io_uring/kbuf.h | struct list_head list | io_buffer | io_uring/kbuf.h | structure for managing individual buffer
+buf_sel_arg | io_uring/kbuf.h | struct iovec* iovs | buf_sel_arg | io_uring/kbuf.h | argument for buffer selection
+io_buffer_select | io_uring/kbuf.h | struct io_kiocb* req, size_t* len | io_buffer_select | io_uring/kbuf.h | function to select buffer
+io_buffers_select | io_uring/kbuf.h | struct io_kiocb* req, struct buf_sel_arg* arg | io_buffers_select | io_uring/kbuf.h | function to select buffers
+io_buffers_peek | io_uring/kbuf.h | struct io_kiocb* req, struct buf_sel_arg* arg | io_buffers_peek | io_uring/kbuf.h | function to peek buffers
+io_destroy_buffers | io_uring/kbuf.h | struct io_ring_ctx* ctx | io_destroy_buffers | io_uring/kbuf.h | function to destroy buffers
+io_remove_buffers_prep | io_uring/kbuf.h | struct io_kiocb* req, struct io_uring_sqe* sqe | io_remove_buffers_prep | io_uring/kbuf.h | function to prepare removal of buffers
+io_remove_buffers | io_uring/kbuf.h | struct io_kiocb* req, unsigned int issue_flags | io_remove_buffers | io_uring/kbuf.h | function to remove buffers
+io_provide_buffers_prep | io_uring/kbuf.h | struct io_kiocb* req, struct io_uring_sqe* sqe | io_provide_buffers_prep | io_uring/kbuf.h | function to prepare buffer provision
+io_provide_buffers | io_uring/kbuf.h | struct io_kiocb* req, unsigned int issue_flags | io_provide_buffers | io_uring/kbuf.h | function to provide buffers
+io_register_pbuf_ring | io_uring/kbuf.h | struct io_ring_ctx* ctx, void __user* arg | io_register_pbuf_ring | io_uring/kbuf.h | function to register buffer ring
+io_unregister_pbuf_ring | io_uring/kbuf.h | struct io_ring_ctx* ctx, void __user* arg | io_unregister_pbuf_ring | io_uring/kbuf.h | function to unregister buffer ring
+io_register_pbuf_status | io_uring/kbuf.h | struct io_ring_ctx* ctx, void __user* arg | io_register_pbuf_status | io_uring/kbuf.h | function to register buffer status
+__io_put_kbuf | io_uring/kbuf.h | struct io_kiocb* req, int len, unsigned issue_flags | __io_put_kbuf | io_uring/kbuf.h | function to put kernel buffer
+io_kbuf_recycle_legacy | io_uring/kbuf.h | struct io_kiocb* req, unsigned issue_flags | io_kbuf_recycle_legacy | io_uring/kbuf.h | function to recycle legacy kernel buffer
+io_pbuf_get_region | io_uring/kbuf.h | struct io_ring_ctx* ctx | io_pbuf_get_region | io_uring/kbuf.h | function to get mapped region of pbuf
+io_kbuf_recycle_ring | io_uring/kbuf.h | struct io_kiocb* req | io_kbuf_recycle_ring | io_uring/kbuf.h | function to recycle buffer ring
+io_do_buffer_select | io_uring/kbuf.h | struct io_kiocb* req | io_do_buffer_select | io_uring/kbuf.h | function to select buffer in legacy buffer
+io_kbuf_recycle | io_uring/kbuf.h | struct io_kiocb* req, unsigned issue_flags | io_kbuf_recycle | io_uring/kbuf.h | function to recycle kernel buffer
+io_kbuf_commit | io_uring/kbuf.h | struct io_kiocb* req, struct io_buffer_list* bl, int len, int nr | io_kbuf_commit | io_uring/kbuf.h | function to commit kernel buffer
+__io_put_kbuf_ring | io_uring/kbuf.h | struct io_kiocb* req, int len, int nr | __io_put_kbuf_ring | io_uring/kbuf.h | function to put kbuf ring
+__io_put_kbuf_list | io_uring/kbuf.h | struct io_kiocb* req, int len, struct list_head* list | __io_put_kbuf_list | io_uring/kbuf.h | function to put kbuf list
+io_kbuf_drop | io_uring/kbuf.h | struct io_kiocb* req | io_kbuf_drop | io_uring/kbuf.h | function to drop kernel buffer
+__io_put_kbufs | io_uring/kbuf.h | struct io_kiocb* req, int len | __io_put_kbufs | io_uring/kbuf.h | function to put kbufs
+io_put_kbuf | io_uring/kbuf.h | struct io_kiocb* req, int len | io_put_kbuf | io_uring/kbuf.h | function to put kernel buffer
+io_put_kbufs | io_uring/kbuf.h | struct io_kiocb* req, int len | io_put_kbufs | io_uring/kbuf.h | function to put multiple kernel buffers
+io_alloc_file_tables | io_uring/filetable.h | struct io_ring_ctx* ctx, struct io_file_table* table, unsigned nr_files | io_alloc_file_tables | io_uring/filetable.h | function to allocate file tables
+io_free_file_tables | io_uring/filetable.h | struct io_ring_ctx* ctx, struct io_file_table* table | io_free_file_tables | io_uring/filetable.h | function to free file tables
+io_fixed_fd_install | io_uring/filetable.h | struct io_kiocb* req, unsigned int issue_flags, struct file* file, unsigned int file_slot | io_fixed_fd_install | io_uring/filetable.h | function to install a fixed fd
+__io_fixed_fd_install | io_uring/filetable.h | struct io_ring_ctx* ctx, struct file* file | __io_fixed_fd_install | io_uring/filetable.h | function to install fixed fd (internal)
+io_fixed_fd_remove | io_uring/filetable.h | struct io_ring_ctx* ctx, unsigned int offset | io_fixed_fd_remove | io_uring/filetable.h | function to remove fixed fd
+io_register_file_alloc_range | io_uring/filetable.h | struct io_ring_ctx* ctx, struct io_uring_file_index_range __user* arg | io_register_file_alloc_range | io_uring/filetable.h | function to register file allocation range
+io_file_get_flags | io_uring/filetable.h | struct file* file | io_file_get_flags | io_uring/filetable.h | function to get file flags
+io_file_bitmap_clear | io_uring/filetable.h | struct io_file_table* table, int bit | io_file_bitmap_clear | io_uring/filetable.h | function to clear file bitmap
+io_file_bitmap_set | io_uring/filetable.h | struct io_file_table* table, int bit | io_file_bitmap_set | io_uring/filetable.h | function to set file bitmap
+io_slot_flags | io_uring/filetable.h | struct io_rsrc_node* node | io_slot_flags | io_uring/filetable.h | function to get flags for file slot
+io_slot_file | io_uring/filetable.h | struct io_rsrc_node* node | io_slot_file | io_uring/filetable.h | function to get file associated with a slot
+io_fixed_file_set | io_uring/filetable.h | struct io_rsrc_node* node, struct file* file | io_fixed_file_set | io_uring/filetable.h | function to set file for fixed slot
+io_file_table_set_alloc_range | io_uring/filetable.h | struct io_ring_ctx* ctx | io_file_table_set_alloc_range | io_uring/filetable.h | function to set allocation range for file table
+io_alloc_file_tables | io_uring/filetable.h | struct io_ring_ctx* ctx, struct io_file_table* table, unsigned nr_files | io_alloc_file_tables | io_uring/filetable.h | function to allocate file tables
+io_free_file_tables | io_uring/filetable.h | struct io_ring_ctx* ctx, struct io_file_table* table | io_free_file_tables | io_uring/filetable.h | function to free file tables
+io_fixed_fd_install | io_uring/filetable.h | struct io_kiocb* req, unsigned int issue_flags, struct file* file, unsigned int file_slot | io_fixed_fd_install | io_uring/filetable.h | function to install a fixed fd
+__io_fixed_fd_install | io_uring/filetable.h | struct io_ring_ctx* ctx, struct file* file | __io_fixed_fd_install | io_uring/filetable.h | function to install fixed fd (internal)
+io_fixed_fd_remove | io_uring/filetable.h | struct io_ring_ctx* ctx, unsigned int offset | io_fixed_fd_remove | io_uring/filetable.h | function to remove fixed fd
+io_register_file_alloc_range | io_uring/filetable.h | struct io_ring_ctx* ctx, struct io_uring_file_index_range __user* arg | io_register_file_alloc_range | io_uring/filetable.h | function to register file allocation range
+io_file_get_flags | io_uring/filetable.h | struct file* file | io_file_get_flags | io_uring/filetable.h | function to get file flags
+io_file_bitmap_clear | io_uring/filetable.h | struct io_file_table* table, int bit | io_file_bitmap_clear | io_uring/filetable.h | function to clear file bitmap
+io_file_bitmap_set | io_uring/filetable.h | struct io_file_table* table, int bit | io_file_bitmap_set | io_uring/filetable.h | function to set file bitmap
+io_slot_flags | io_uring/filetable.h | struct io_rsrc_node* node | io_slot_flags | io_uring/filetable.h | function to get flags for file slot
+io_slot_file | io_uring/filetable.h | struct io_rsrc_node* node | io_slot_file | io_uring/filetable.h | function to get file associated with a slot
+io_fixed_file_set | io_uring/filetable.h | struct io_rsrc_node* node, struct file* file | io_fixed_file_set | io_uring/filetable.h | function to set file for fixed slot
+io_file_table_set_alloc_range | io_uring/filetable.h | struct io_ring_ctx* ctx | io_file_table_set_alloc_range | io_uring/filetable.h | function to set allocation range for file table
