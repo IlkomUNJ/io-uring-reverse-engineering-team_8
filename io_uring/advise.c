@@ -14,6 +14,7 @@
 #include "io_uring.h"
 #include "advise.h"
 
+// this struct is for giving advice to the kernel how to set file access.
 struct io_fadvise {
 	struct file			*file;
 	u64				offset;
@@ -21,6 +22,7 @@ struct io_fadvise {
 	u32				advice;
 };
 
+// this struct is for giving advice to the kernel how to set memory.
 struct io_madvise {
 	struct file			*file;
 	u64				addr;
@@ -28,6 +30,7 @@ struct io_madvise {
 	u32				advice;
 };
 
+//this func prepares memory advice (madvice) request submission to the io_uring
 int io_madvise_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
 {
 #if defined(CONFIG_ADVISE_SYSCALLS) && defined(CONFIG_MMU)
@@ -48,6 +51,7 @@ int io_madvise_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
 #endif
 }
 
+//this func executes the madvise request
 int io_madvise(struct io_kiocb *req, unsigned int issue_flags)
 {
 #if defined(CONFIG_ADVISE_SYSCALLS) && defined(CONFIG_MMU)
@@ -64,6 +68,8 @@ int io_madvise(struct io_kiocb *req, unsigned int issue_flags)
 #endif
 }
 
+// determines if the fie advise (fadvise) requet should be forced to execute
+// asynchronously or not
 static bool io_fadvise_force_async(struct io_fadvise *fa)
 {
 	switch (fa->advice) {
@@ -76,6 +82,7 @@ static bool io_fadvise_force_async(struct io_fadvise *fa)
 	}
 }
 
+// this func prepares fadvice request submission to the io_uring
 int io_fadvise_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
 {
 	struct io_fadvise *fa = io_kiocb_to_cmd(req, struct io_fadvise);
@@ -93,6 +100,7 @@ int io_fadvise_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
 	return 0;
 }
 
+//this func executes the fadvice request
 int io_fadvise(struct io_kiocb *req, unsigned int issue_flags)
 {
 	struct io_fadvise *fa = io_kiocb_to_cmd(req, struct io_fadvise);

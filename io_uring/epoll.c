@@ -12,6 +12,7 @@
 #include "io_uring.h"
 #include "epoll.h"
 
+/*This structure is used to hold information related to an epoll control operation */
 struct io_epoll {
 	struct file			*file;
 	int				epfd;
@@ -20,12 +21,16 @@ struct io_epoll {
 	struct epoll_event		event;
 };
 
+/* This struct is used for the 'epoll_wait' operation, which it waits for events on the epoll instance  */
 struct io_epoll_wait {
 	struct file			*file;
 	int				maxevents;
 	struct epoll_event __user	*events;
 };
 
+/*This funct prepares an epoll control request by getting the necessary info from the submission queue entry
+It checks if the request params are valid, reads the file descriptor, operation type, and target file descriptor
+and if there's an event to add, it copies that event from user space into the 'io_epoll' structure */
 int io_epoll_ctl_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
 {
 	struct io_epoll *epoll = io_kiocb_to_cmd(req, struct io_epoll);
@@ -68,6 +73,8 @@ int io_epoll_ctl(struct io_kiocb *req, unsigned int issue_flags)
 	return IOU_OK;
 }
 
+/* Prepares an epoll_wait request by extracting the max number of events to wait for and the user space pointer for the events array from the submission queue entry
+It checks for valid parames and sets them in the 'io_epoll_wait' structure */
 int io_epoll_wait_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
 {
 	struct io_epoll_wait *iew = io_kiocb_to_cmd(req, struct io_epoll_wait);
@@ -80,6 +87,8 @@ int io_epoll_wait_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
 	return 0;
 }
 
+/* Executes the epoll_wait operation, which waits for events on the specified epoll file descriptor
+ It calls 'epoll_sendevents' to fill the user-provided events array and returns the result */
 int io_epoll_wait(struct io_kiocb *req, unsigned int issue_flags)
 {
 	struct io_epoll_wait *iew = io_kiocb_to_cmd(req, struct io_epoll_wait);

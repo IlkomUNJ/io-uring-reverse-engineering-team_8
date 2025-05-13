@@ -2,6 +2,10 @@
 
 #include "alloc_cache.h"
 
+
+/*this func frees all entries in the allocation cache by repeatedly retrieving entries
+ and calling the provided 'free' func on each. After freeing the entries, it dellocates the memory
+from the 'entries' array and sets the pointer to NULL */
 void io_alloc_cache_free(struct io_alloc_cache *cache,
 			 void (*free)(const void *))
 {
@@ -17,7 +21,9 @@ void io_alloc_cache_free(struct io_alloc_cache *cache,
 	cache->entries = NULL;
 }
 
-/* returns false if the cache was initialized properly */
+/* this func initializes the allocation cache by allocating an array of pointers for cached entries
+It sets various parameters (max number of cached entries, size of each element, num of bytes to clear the allocation)
+returns false if the cache was initialized properly */
 bool io_alloc_cache_init(struct io_alloc_cache *cache,
 			 unsigned max_nr, unsigned int size,
 			 unsigned int init_bytes)
@@ -33,6 +39,9 @@ bool io_alloc_cache_init(struct io_alloc_cache *cache,
 	return false;
 }
 
+/* this func allocates a new object using 'kmalloc' based on the element size
+if the allocation successful and the 'init_clear' is set, it clears the allocated memory
+and then returning to the new object */
 void *io_cache_alloc_new(struct io_alloc_cache *cache, gfp_t gfp)
 {
 	void *obj;

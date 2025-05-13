@@ -12,6 +12,8 @@ Score is mainly calculated from individual contributions made to the commit. The
 - [Task 3](/data_structure.md)
 - [Task 4](/function_documentation.md)
 
-## Team Members
-- Member A
-- Member B
+## Team Members (Group 8)
+-  Dinda Febriyanti Beta Kore (1313623061)
+-  Mahija Mohammed Hardjono (1313623044)
+-  Nadief Arya Saputra (131362360)
+-  Sabiyan Avril Chandrakanta (1313623020)

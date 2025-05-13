@@ -16,6 +16,11 @@
 #include "rsrc.h"
 
 #ifdef CONFIG_PROC_FS
+
+/*  Displays credential information (UID, GID, groups, and capabilities) of a user 
+ associated with a given io_uring file descriptor in the /proc file output
+useful for debugging and inspecting io_uring credentials from user space 
+*/
 static __cold int io_uring_show_cred(struct seq_file *m, unsigned int id,
 		const struct cred *cred)
 {
@@ -47,6 +52,8 @@ static __cold int io_uring_show_cred(struct seq_file *m, unsigned int id,
 }
 
 #ifdef CONFIG_NET_RX_BUSY_POLL
+/* Displays general information related to NAPI 
+busy polling settings for an io_uring context, including whether tracking is enabled and preferred */
 static __cold void common_tracking_show_fdinfo(struct io_ring_ctx *ctx,
 					       struct seq_file *m,
 					       const char *tracking_strategy)
@@ -60,6 +67,8 @@ static __cold void common_tracking_show_fdinfo(struct io_ring_ctx *ctx,
 		seq_puts(m, "napi_prefer_busy_poll:\tfalse\n");
 }
 
+/* Determines the NAPI tracking mode used by the io_uring context and prints 
+relevant information using common_tracking_show_fdinfo or a disabled message */
 static __cold void napi_show_fdinfo(struct io_ring_ctx *ctx,
 				    struct seq_file *m)
 {
@@ -80,6 +89,7 @@ static __cold void napi_show_fdinfo(struct io_ring_ctx *ctx,
 	}
 }
 #else
+/* Dummy version of napi_show_fdinfo when CONFIG_NET_RX_BUSY_POLL is not enabled */
 static inline void napi_show_fdinfo(struct io_ring_ctx *ctx,
 				    struct seq_file *m)
 {
@@ -90,6 +100,10 @@ static inline void napi_show_fdinfo(struct io_ring_ctx *ctx,
  * Caller holds a reference to the file already, we don't need to do
  * anything else to get an extra reference.
  */
+
+/* Outputs detailed information about the io_uring instance associated with a file descriptor
+including queue states, in-flight requests, SQE/CQE entries, and submission thread statistics
+This is printed to /proc/<pid>/fdinfo/<fd> and is mainly used for diagnostics and debugging */
 __cold void io_uring_show_fdinfo(struct seq_file *m, struct file *file)
 {
 	struct io_ring_ctx *ctx = file->private_data;

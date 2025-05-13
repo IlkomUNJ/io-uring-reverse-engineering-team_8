@@ -31,9 +31,9 @@ struct io_cancel {
 			 IORING_ASYNC_CANCEL_ANY | IORING_ASYNC_CANCEL_FD_FIXED | \
 			 IORING_ASYNC_CANCEL_USERDATA | IORING_ASYNC_CANCEL_OP)
 
-/*
- * Returns true if the request matches the criteria outlined by 'cd'.
- */
+/*This func checks if a specific I/O request matches what we want to cancel based on the info in io_cancel_data
+It looks at things like the context, file descriptor, operation code, and user data to see if it should cancel the request 
+returns true if the request matches the criteria outlined by 'cd' */
 bool io_cancel_req_match(struct io_kiocb *req, struct io_cancel_data *cd)
 {
 	bool match_user_data = cd->flags & IORING_ASYNC_CANCEL_USERDATA;
@@ -65,6 +65,8 @@ check_seq:
 	return true;
 }
 
+/* This is a callback function that checks if a work item in the I/O queue matches the cancel criteria
+ If it matches, it returns true */
 static bool io_cancel_cb(struct io_wq_work *work, void *data)
 {
 	struct io_kiocb *req = container_of(work, struct io_kiocb, work);
@@ -73,6 +75,8 @@ static bool io_cancel_cb(struct io_wq_work *work, void *data)
 	return io_cancel_req_match(req, cd);
 }
 
+/* This func tries to cancel one async I/O request for a specific task. 
+It returns a result that tells if the cancel worked, already running, or it couldn’t find the request */
 static int io_async_cancel_one(struct io_uring_task *tctx,
 			       struct io_cancel_data *cd)
 {
@@ -100,6 +104,9 @@ static int io_async_cancel_one(struct io_uring_task *tctx,
 	return ret;
 }
 
+/* This func tries to cancel an I/O request using the cancel data
+ First, it tries to do it asynchronously, and if that doesn’t work,
+  it checks other ways to cancel such as  polling or waiting */
 int io_try_cancel(struct io_uring_task *tctx, struct io_cancel_data *cd,
 		  unsigned issue_flags)
 {
@@ -135,6 +142,8 @@ int io_try_cancel(struct io_uring_task *tctx, struct io_cancel_data *cd,
 	return ret;
 }
 
+/*This func gets everything ready for an async cancel request by pulling info from the submission queue entry
+It checks if the request params are okay and sets them in the 'io_cancel' structure */
 int io_async_cancel_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
 {
 	struct io_cancel *cancel = io_kiocb_to_cmd(req, struct io_cancel);
@@ -162,6 +171,8 @@ int io_async_cancel_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
 	return 0;
 }
 
+/*This func does the async canceling of I/O requests based on the cancel data
+It tries to cancel requests in the current task and if needed it goes through all tasks to cancel more requests */
 static int __io_async_cancel(struct io_cancel_data *cd,
 			     struct io_uring_task *tctx,
 			     unsigned int issue_flags)
@@ -195,6 +206,8 @@ static int __io_async_cancel(struct io_cancel_data *cd,
 	return all ? nr : ret;
 }
 
+/*This func starts the async cancel for an I/O request
+It prepares the cancel data, gets the file descriptor if needed, and calls the cancel function */
 int io_async_cancel(struct io_kiocb *req, unsigned int issue_flags)
 {
 	struct io_cancel *cancel = io_kiocb_to_cmd(req, struct io_cancel);
@@ -232,6 +245,8 @@ done:
 	return IOU_OK;
 }
 
+/*This func cancels an I/O request synchronously by looking up the file descriptor and calling the async cancel function
+It makes sure it uses the right file resource for the cancel and returns the result */
 static int __io_sync_cancel(struct io_uring_task *tctx,
 			    struct io_cancel_data *cd, int fd)
 {
@@ -253,6 +268,9 @@ static int __io_sync_cancel(struct io_uring_task *tctx,
 	return __io_async_cancel(cd, tctx, 0);
 }
 
+/*This funcdeals with sync cancel requests from user space
+It copies the cancel parameters from user space, checks if they’re valid,
+ and tries to cancel the I/O requests, maybe waiting for them to finish if needed */
 int io_sync_cancel(struct io_ring_ctx *ctx, void __user *arg)
 	__must_hold(&ctx->uring_lock)
 {
@@ -342,6 +360,8 @@ out:
 	return ret;
 }
 
+/*This func goes through a list and removes and cancels all matching I/O requests based on the task context and cancel criteria
+ It returns true if it found and canceled any requests */
 bool io_cancel_remove_all(struct io_ring_ctx *ctx, struct io_uring_task *tctx,
 			  struct hlist_head *list, bool cancel_all,
 			  bool (*cancel)(struct io_kiocb *))
@@ -363,6 +383,8 @@ bool io_cancel_remove_all(struct io_ring_ctx *ctx, struct io_uring_task *tctx,
 	return found;
 }
 
+/*This func tries to remove and cancel I/O requests from a list that match the cancel criteria
+ It returns how many requests it canceled or '-ENOENT' if it didn’t find any matching requests */
 int io_cancel_remove(struct io_ring_ctx *ctx, struct io_cancel_data *cd,
 		     unsigned int issue_flags, struct hlist_head *list,
 		     bool (*cancel)(struct io_kiocb *))
