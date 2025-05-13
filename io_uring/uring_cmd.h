@@ -3,6 +3,14 @@
 #include <linux/io_uring/cmd.h>
 #include <linux/io_uring_types.h>
 
+/*
+ * Structure: io_async_cmd
+ * Purpose   : Stores asynchronous command details.
+ *             - data: Internal command data used by the uring command.
+ *             - vec : I/O vector for asynchronous I/O operations.
+ *             - sqes: Array of two SQE entries cached for the command.
+ */
+
 struct io_async_cmd {
 	struct io_uring_cmd_data	data;
 	struct iou_vec			vec;
